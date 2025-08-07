@@ -26,7 +26,7 @@ loom {
     customManifest.set(custom_manifest_url)
 
     intermediaryUrl = "https://github.com/BluSpring/maven-repo/raw/main/xyz/bluspring/intermediary/empty/intermediary-empty.jar"
-    serverOnlyMinecraftJar()
+    //serverOnlyMinecraftJar()
 }
 
 sourceSets {
@@ -45,8 +45,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    //mappings "org.mcphackers:retromcp:${minecraft_version}-server"
-    mappings("net.glasslauncher:biny:${yarn_mappings}:v2")
+    mappings "org.mcphackers:retromcp:${minecraft_version}-server"
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 

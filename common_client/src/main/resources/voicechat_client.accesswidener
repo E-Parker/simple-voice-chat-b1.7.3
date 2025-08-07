@@ -1,2 +1,2 @@
 accessWidener v2 named
-transitive-accessible method net/minecraft/src/Gui drawRect (IIIII)V
+# transitive-accessible method net/minecraft/src/Gui drawRect (IIIII)V
