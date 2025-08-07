@@ -9,6 +9,7 @@ targetCompatibility = JavaLanguageVersion.of(java_version as int)
 
 repositories {
     mavenCentral()
+    maven { url = "https://maven.glass-launcher.net/releases/" }
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
     mavenLocal()
     maven {
