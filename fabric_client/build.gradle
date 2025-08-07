@@ -1,19 +1,21 @@
 plugins {
-    id 'common-loom' version "${common_loom_version}"
+    id("maven-publish")
+    id("fabric-loom") version "1.9.2"
+    id("babric-loom-extension") version "1.9.4"
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
 }
 
 archivesBaseName = project.archives_base_name
 version = mod_version
 group = maven_group
-
+/*
 loom {
-    customManifest.set(custom_manifest_url)
-    intermediaryUrl = "https://github.com/BluSpring/maven-repo/raw/main/xyz/bluspring/intermediary/empty/intermediary-empty.jar"
+    //customManifest.set(custom_manifest_url)
+    //intermediaryUrl = "https://github.com/BluSpring/maven-repo/raw/main/xyz/bluspring/intermediary/empty/intermediary-empty.jar"
     //clientOnlyMinecraftJar()
 
     accessWidenerPath = project(":common_client").file("src/main/resources/voicechat_client.accesswidener")
-}
+}*/
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 sourceCompatibility = JavaLanguageVersion.of(java_version as int)
@@ -21,6 +23,7 @@ targetCompatibility = JavaLanguageVersion.of(java_version as int)
 
 repositories {
     mavenCentral()
+    maven { url = "https://maven.glass-launcher.net/babric/" }
     maven { url = "https://maven.glass-launcher.net/releases/" }
     maven { url = 'https://maven.fabricmc.net/' }
     maven { url = 'https://maven.terraformersmc.com/' }
@@ -35,9 +38,11 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "org.mcphackers:retromcp:${minecraft_version}-client"
+    mappings("net.glasslauncher:biny:${yarn_mappings}:v2")
+    modImplementation("babric:fabric-loader:${fabric_loader_version}")
+    //mappings "org.mcphackers:retromcp:${minecraft_version}-client"
 
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    //modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 
     shadow(implementation(project(path: ":common", configuration: "namedElements")))
     include(implementation(project(path: ":common_client", configuration: "namedElements")))
@@ -55,6 +60,16 @@ dependencies {
     shadow(implementation("com.google.guava:guava:31.1-jre"))
     shadow(implementation('com.google.code.gson:gson:2.10.1'))
     shadow(implementation('commons-io:commons-io:2.12.0'))
+
+    implementation("org.slf4j:slf4j-api:1.8.0-beta4")
+    // convenience stuff
+    // adds some useful annotations for data classes. does not add any dependencies
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+
+    // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
+    implementation("org.jetbrains:annotations:23.0.0")
+    implementation("com.google.guava:guava:33.2.1-jre")
 
     shadow(implementation(project(":api")))
 }
