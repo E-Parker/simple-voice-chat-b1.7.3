@@ -23,8 +23,8 @@ import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import de.maxhenkel.voicechat.voice.server.ClientConnection;
 import de.maxhenkel.voicechat.voice.server.Server;
 import de.maxhenkel.voicechat.voice.server.ServerWorldUtils;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -171,7 +171,7 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
             return;
         }
 
-        EntityPlayer player = (EntityPlayer) receiver.getPlayer().getPlayer();
+        PlayerEntity player = (PlayerEntity) receiver.getPlayer().getPlayer();
 
         @Nullable ClientConnection c = server.getConnections().get(receiver.getPlayer().getUuid());
         try {
@@ -188,7 +188,7 @@ public class VoicechatServerApiImpl extends VoicechatApiImpl implements Voicecha
         if (server == null) {
             return null;
         }
-        EntityPlayer player = Voicechat.serverInstance.getPlayerByUuid(playerUuid);
+        PlayerEntity player = Voicechat.serverInstance.getPlayerByUuid(playerUuid);
         if (player == null) {
             return null;
         }

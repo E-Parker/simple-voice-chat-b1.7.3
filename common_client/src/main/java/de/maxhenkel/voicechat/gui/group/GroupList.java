@@ -6,7 +6,7 @@ import de.maxhenkel.voicechat.gui.widgets.ListScreenListBase;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class GroupList extends ListScreenListBase<GroupEntry> {
         UUID group = ClientManager.getPlayerStateManager().getGroupID();
         if (group == null) {
             clearEntries();
-            mc.displayGuiScreen(null);
+            mc.setScreen(null);
             return;
         }
         boolean changed = false;
@@ -65,7 +65,7 @@ public class GroupList extends ListScreenListBase<GroupEntry> {
     }
 
     public static void update() {
-        GuiScreen screen = MinecraftAccessor.getMinecraft().currentScreen;
+        Screen screen = MinecraftAccessor.getMinecraft().currentScreen;
         if (screen instanceof GroupScreen) {
             GroupScreen groupScreen = (GroupScreen) screen;
             groupScreen.groupList.updateMembers();

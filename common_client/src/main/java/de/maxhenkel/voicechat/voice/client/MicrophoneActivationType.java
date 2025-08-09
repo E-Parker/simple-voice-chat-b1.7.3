@@ -1,10 +1,10 @@
 package de.maxhenkel.voicechat.voice.client;
 
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public enum MicrophoneActivationType {
 
-    PTT(StringTranslate.getInstance().translateKey("message.voicechat.activation_type.ptt")), VOICE(StringTranslate.getInstance().translateKey("message.voicechat.activation_type.voice"));
+    PTT(TranslationStorage.getInstance().get("message.voicechat.activation_type.ptt")), VOICE(TranslationStorage.getInstance().get("message.voicechat.activation_type.voice"));
 
     private final String component;
 

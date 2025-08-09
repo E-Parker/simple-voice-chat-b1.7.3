@@ -3,13 +3,12 @@ package de.maxhenkel.voicechat.voice.client;
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
 import de.maxhenkel.voicechat.VoicechatClient;
-import de.maxhenkel.voicechat.extensions.GuiExtension;
+import de.maxhenkel.voicechat.extensions.DrawContextExtension;
 import de.maxhenkel.voicechat.gui.GameProfileUtils;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.ScaledResolution;
+import net.minecraft.client.util.ScreenScaler;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class GroupChatManager {
             return;
         }
         Minecraft mc = MinecraftAccessor.getMinecraft();
-        ScaledResolution scaledResolution = new ScaledResolution(mc.displayWidth, mc.displayHeight);
+        ScreenScaler scaledResolution = new ScreenScaler(mc.options, mc.displayWidth, mc.displayHeight);
 
         List<PlayerState> groupMembers = getGroupMembers(VoicechatClient.CLIENT_CONFIG.showOwnGroupIcon.get());
 
@@ -69,19 +68,19 @@ public class GroupChatManager {
             if (client.getTalkCache().isTalking(state.getUuid())) {
                 GL11.glColor4f(1F, 1F, 1F, 1F);
                 TextureHelper.bindTexture(TALK_OUTLINE);
-                GuiExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -10 : 0, posY < 0 ? -10 : 0, 0, 0, 10, 10, 16, 16);
+                DrawContextExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -10 : 0, posY < 0 ? -10 : 0, 0, 0, 10, 10, 16, 16);
             }
             GL11.glEnable(GL11.GL_BLEND);
             GameProfileUtils.bindSkinTexture(state.getName());
-            GuiExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -1 - 8 : 1, posY < 0 ? -1 - 8 : 1, 8, 8, 8, 8, 64, 64);
-            GuiExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -1 - 8 : 1, posY < 0 ? -1 - 8 : 1, 40, 8, 8, 8, 64, 64);
+            DrawContextExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -1 - 8 : 1, posY < 0 ? -1 - 8 : 1, 8, 8, 8, 8, 64, 64);
+            DrawContextExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -1 - 8 : 1, posY < 0 ? -1 - 8 : 1, 40, 8, 8, 8, 64, 64);
 
             if (state.isDisabled()) {
                 GL11.glPushMatrix();
                 GL11.glTranslated((posX < 0 ? -1D - 8D : 1D), posY < 0 ? -1D - 8D : 1D, 0D);
                 GL11.glScalef(0.5F, 0.5F, 1F);
                 TextureHelper.bindTexture(SPEAKER_OFF_ICON);
-                GuiExtension.staticDrawModalRectWithCustomSizedTexture(0, 0, 0, 0, 16, 16, 16, 16);
+                DrawContextExtension.staticDrawModalRectWithCustomSizedTexture(0, 0, 0, 0, 16, 16, 16, 16);
                 GL11.glPopMatrix();
             }
 

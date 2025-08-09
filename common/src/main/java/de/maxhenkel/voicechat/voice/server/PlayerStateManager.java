@@ -1,14 +1,14 @@
 package de.maxhenkel.voicechat.voice.server;
 
 import de.maxhenkel.voicechat.Voicechat;
-import de.maxhenkel.voicechat.extensions.EntityPlayerExtension;
+import de.maxhenkel.voicechat.extensions.PlayerEntityExtension;
 import de.maxhenkel.voicechat.intercompatibility.CommonCompatibilityManager;
 import de.maxhenkel.voicechat.net.NetManager;
 import de.maxhenkel.voicechat.net.PlayerStatePacket;
 import de.maxhenkel.voicechat.net.PlayerStatesPacket;
 import de.maxhenkel.voicechat.plugins.PluginManager;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class PlayerStateManager {
         CommonCompatibilityManager.INSTANCE.onPlayerCompatibilityCheckSucceeded(this::onPlayerCompatibilityCheckSucceeded);
 
         CommonCompatibilityManager.INSTANCE.getNetManager().updateStateChannel.setServerListener((player, handler, packet) -> {
-            PlayerState state = states.get(((EntityPlayerExtension) player).getUniqueID());
+            PlayerState state = states.get(((PlayerEntityExtension) player).getUniqueID());
 
             if (state == null) {
                 state = defaultDisconnectedState(player);
@@ -38,10 +38,10 @@ public class PlayerStateManager {
 
             state.setDisabled(packet.isDisabled());
 
-            states.put(((EntityPlayerExtension) player).getUniqueID(), state);
+            states.put(((PlayerEntityExtension) player).getUniqueID(), state);
 
             broadcastState(state);
-            Voicechat.logDebug("Got state of {}: {}", player.username, state);
+            Voicechat.logDebug("Got state of {}: {}", player.name, state);
         });
     }
 
@@ -51,23 +51,23 @@ public class PlayerStateManager {
         PluginManager.instance().onPlayerStateChanged(state);
     }
 
-    private void onPlayerCompatibilityCheckSucceeded(EntityPlayer player) {
+    private void onPlayerCompatibilityCheckSucceeded(PlayerEntity player) {
         PlayerStatesPacket packet = new PlayerStatesPacket(states);
         NetManager.sendToClient(player, packet);
-        Voicechat.logDebug("Sending initial states to {}", player.username);
+        Voicechat.logDebug("Sending initial states to {}", player.name);
     }
 
-    private void onPlayerLoggedIn(EntityPlayer player) {
+    private void onPlayerLoggedIn(PlayerEntity player) {
         PlayerState state = defaultDisconnectedState(player);
-        states.put(((EntityPlayerExtension) player).getUniqueID(), state);
+        states.put(((PlayerEntityExtension) player).getUniqueID(), state);
         broadcastState(state);
-        Voicechat.logDebug("Setting default state of {}: {}", player.username, state);
+        Voicechat.logDebug("Setting default state of {}: {}", player.name, state);
     }
 
-    private void onPlayerLoggedOut(EntityPlayer player) {
-        states.remove(((EntityPlayerExtension) player).getUniqueID());
-        broadcastState(new PlayerState(((EntityPlayerExtension) player).getUniqueID(), player.username, false, true));
-        Voicechat.logDebug("Removing state of {}", player.username);
+    private void onPlayerLoggedOut(PlayerEntity player) {
+        states.remove(((PlayerEntityExtension) player).getUniqueID());
+        broadcastState(new PlayerState(((PlayerEntityExtension) player).getUniqueID(), player.name, false, true));
+        Voicechat.logDebug("Removing state of {}", player.name);
     }
 
     private void onPlayerVoicechatDisconnect(UUID uuid) {
@@ -82,8 +82,8 @@ public class PlayerStateManager {
         Voicechat.logDebug("Set state of {} to disconnected: {}", uuid, state);
     }
 
-    private void onPlayerVoicechatConnect(EntityPlayer player) {
-        PlayerState state = states.get(((EntityPlayerExtension) player).getUniqueID());
+    private void onPlayerVoicechatConnect(PlayerEntity player) {
+        PlayerState state = states.get(((PlayerEntityExtension) player).getUniqueID());
 
         if (state == null) {
             state = defaultDisconnectedState(player);
@@ -91,10 +91,10 @@ public class PlayerStateManager {
 
         state.setDisconnected(false);
 
-        states.put(((EntityPlayerExtension) player).getUniqueID(), state);
+        states.put(((PlayerEntityExtension) player).getUniqueID(), state);
 
         broadcastState(state);
-        Voicechat.logDebug("Set state of {} to connected: {}", player.username, state);
+        Voicechat.logDebug("Set state of {} to connected: {}", player.name, state);
     }
 
     @Nullable
@@ -102,20 +102,20 @@ public class PlayerStateManager {
         return states.get(playerUUID);
     }
 
-    public static PlayerState defaultDisconnectedState(EntityPlayer player) {
-        return new PlayerState(((EntityPlayerExtension) player).getUniqueID(), player.username, false, true);
+    public static PlayerState defaultDisconnectedState(PlayerEntity player) {
+        return new PlayerState(((PlayerEntityExtension) player).getUniqueID(), player.name, false, true);
     }
 
-    public void setGroup(EntityPlayer player, @Nullable UUID group) {
-        PlayerState state = states.get(((EntityPlayerExtension) player).getUniqueID());
+    public void setGroup(PlayerEntity player, @Nullable UUID group) {
+        PlayerState state = states.get(((PlayerEntityExtension) player).getUniqueID());
         if (state == null) {
             state = PlayerStateManager.defaultDisconnectedState(player);
-            Voicechat.logDebug("Defaulting to default state for {}: {}", player.username, state);
+            Voicechat.logDebug("Defaulting to default state for {}: {}", player.name, state);
         }
         state.setGroup(group);
-        states.put(((EntityPlayerExtension) player).getUniqueID(), state);
+        states.put(((PlayerEntityExtension) player).getUniqueID(), state);
         broadcastState(state);
-        Voicechat.logDebug("Setting group of {}: {}", player.username, state);
+        Voicechat.logDebug("Setting group of {}: {}", player.name, state);
     }
 
     public Collection<PlayerState> getStates() {

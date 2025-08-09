@@ -6,15 +6,15 @@ import de.maxhenkel.voicechat.voice.client.*;
 import de.maxhenkel.voicechat.voice.client.speaker.*;
 import de.maxhenkel.voicechat.voice.common.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 import javax.annotation.Nullable;
 
 public class MicTestButton extends ButtonBase {
 
-    private static final String TEST_UNAVAILABLE = StringTranslate.getInstance().translateKey("message.voicechat.mic_test_unavailable");
-    private static final String TEST_ON = StringTranslate.getInstance().translateKey("message.voicechat.mic_test_on");
-    private static final String TEST_OFF = StringTranslate.getInstance().translateKey("message.voicechat.mic_test_off");
+    private static final String TEST_UNAVAILABLE = TranslationStorage.getInstance().get("message.voicechat.mic_test_unavailable");
+    private static final String TEST_ON = TranslationStorage.getInstance().get("message.voicechat.mic_test_on");
+    private static final String TEST_OFF = TranslationStorage.getInstance().get("message.voicechat.mic_test_off");
 
     private boolean micActive;
     @Nullable
@@ -32,20 +32,20 @@ public class MicTestButton extends ButtonBase {
     }
 
     private void updateText() {
-        if (!enabled) {
-            displayString = TEST_UNAVAILABLE;
+        if (!active) {
+            text = TEST_UNAVAILABLE;
             return;
         }
         if (micActive) {
-            displayString = TEST_ON;
+            text = TEST_ON;
         } else {
-            displayString = TEST_OFF;
+            text = TEST_OFF;
         }
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        super.drawButton(mc, mouseX, mouseY);
+    public void render(Minecraft mc, int mouseX, int mouseY) {
+        super.render(mc, mouseX, mouseY);
         if (voiceThread != null) {
             voiceThread.updateLastRender();
         }
@@ -66,7 +66,7 @@ public class MicTestButton extends ButtonBase {
                 voiceThread.start();
             } catch (Exception e) {
                 setMicActive(false);
-                enabled = false;
+                active = false;
                 e.printStackTrace();
             }
         } else {

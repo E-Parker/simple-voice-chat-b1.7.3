@@ -12,14 +12,12 @@ import de.maxhenkel.voicechat.gui.widgets.ListScreenBase;
 import de.maxhenkel.voicechat.gui.widgets.ToggleImageButton;
 import de.maxhenkel.voicechat.net.ClientNetManager;
 import de.maxhenkel.voicechat.net.LeaveGroupPacket;
-import de.maxhenkel.voicechat.net.NetManager;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientPlayerStateManager;
 import de.maxhenkel.voicechat.voice.client.MicrophoneActivationType;
 import de.maxhenkel.voicechat.voice.common.ClientGroup;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public class GroupScreen extends ListScreenBase {
 
@@ -28,8 +26,8 @@ public class GroupScreen extends ListScreenBase {
     protected static final String MICROPHONE = TextureHelper.format(Voicechat.MODID, "textures/icons/microphone_button.png");
     protected static final String SPEAKER = TextureHelper.format(Voicechat.MODID, "textures/icons/speaker_button.png");
     protected static final String GROUP_HUD = TextureHelper.format(Voicechat.MODID, "textures/icons/group_hud_button.png");
-    protected static final String TITLE = StringTranslate.getInstance().translateKey("gui.voicechat.group.title");
-    protected static final String LEAVE_GROUP = StringTranslate.getInstance().translateKey("message.voicechat.leave_group");
+    protected static final String TITLE = TranslationStorage.getInstance().get("gui.voicechat.group.title");
+    protected static final String LEAVE_GROUP = TranslationStorage.getInstance().get("message.voicechat.leave_group");
 
     protected static final int HEADER_SIZE = 16;
     protected static final int FOOTER_SIZE = 32;
@@ -51,8 +49,8 @@ public class GroupScreen extends ListScreenBase {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         guiLeft = guiLeft + 2;
         guiTop = 32;
         int minUnits = (int) Math.ceil((float) (CELL_HEIGHT + 4) / (float) UNIT_SIZE);
@@ -70,65 +68,65 @@ public class GroupScreen extends ListScreenBase {
         mute = new ToggleImageButton(0, guiLeft + 7, buttonY, MICROPHONE, stateManager::isMuted, button -> {
             stateManager.setMuted(!stateManager.isMuted());
         }, new MuteTooltipSupplier(this, stateManager));
-        controlList.add(mute);
+        buttons.add(mute);
 
         disable = new ToggleImageButton(1, guiLeft + 7 + buttonSize + 3, buttonY, SPEAKER, stateManager::isDisabled, button -> {
             stateManager.setDisabled(!stateManager.isDisabled());
         }, new DisableTooltipSupplier(this, stateManager));
-        controlList.add(disable);
+        buttons.add(disable);
 
         showHUD = new ToggleImageButton(2, guiLeft + 7 + (buttonSize + 3) * 2, buttonY, GROUP_HUD, VoicechatClient.CLIENT_CONFIG.showGroupHUD::get, button -> {
             VoicechatClient.CLIENT_CONFIG.showGroupHUD.set(!VoicechatClient.CLIENT_CONFIG.showGroupHUD.get()).save();
         }, new HideGroupHudTooltipSupplier(this));
-        controlList.add(showHUD);
+        buttons.add(showHUD);
 
         leave = new ImageButton(3, guiLeft + xSize - buttonSize - 7, buttonY, LEAVE, button -> {
             ClientNetManager.sendToServer(new LeaveGroupPacket());
-            mc.displayGuiScreen(new JoinGroupScreen());
+            minecraft.setScreen(new JoinGroupScreen());
         }, (button, mouseX, mouseY) -> {
-            mc.fontRenderer.drawStringWithShadow(LEAVE_GROUP, mouseX, mouseY, 16777215);
+            minecraft.textRenderer.drawWithShadow(LEAVE_GROUP, mouseX, mouseY, 16777215);
         });
-        controlList.add(leave);
+        buttons.add(leave);
 
         checkButtons();
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
         checkButtons();
     }
 
     private void checkButtons() {
         if (mute != null) {
-            mute.enabled = VoicechatClient.CLIENT_CONFIG.microphoneActivationType.get().equals(MicrophoneActivationType.VOICE);
+            mute.active = VoicechatClient.CLIENT_CONFIG.microphoneActivationType.get().equals(MicrophoneActivationType.VOICE);
         }
         if (showHUD != null) {
-            showHUD.enabled = !VoicechatClient.CLIENT_CONFIG.hideIcons.get();
+            showHUD.active = !VoicechatClient.CLIENT_CONFIG.hideIcons.get();
         }
     }
 
     @Override
     public void renderBackground(int mouseX, int mouseY, float delta) {
         TextureHelper.bindTexture(TEXTURE);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, HEADER_SIZE);
+        drawTexture(guiLeft, guiTop, 0, 0, xSize, HEADER_SIZE);
         for (int i = 0; i < units; i++) {
-            drawTexturedModalRect(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * i, 0, HEADER_SIZE, xSize, UNIT_SIZE);
+            drawTexture(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * i, 0, HEADER_SIZE, xSize, UNIT_SIZE);
         }
-        drawTexturedModalRect(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * units, 0, HEADER_SIZE + UNIT_SIZE, xSize, FOOTER_SIZE);
-        drawTexturedModalRect(guiLeft + 10, guiTop + HEADER_SIZE + 6 - 2, xSize, 0, 12, 12);
+        drawTexture(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * units, 0, HEADER_SIZE + UNIT_SIZE, xSize, FOOTER_SIZE);
+        drawTexture(guiLeft + 10, guiTop + HEADER_SIZE + 6 - 2, xSize, 0, 12, 12);
     }
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
         String title;
         if (group.getType().equals(Group.Type.NORMAL)) {
-            title = String.format(StringTranslate.getInstance().translateKey("message.voicechat.group_title"), group.getName());
+            title = String.format(TranslationStorage.getInstance().get("message.voicechat.group_title"), group.getName());
         } else {
-            title = String.format(StringTranslate.getInstance().translateKey("message.voicechat.group_type_title"), group.getName(), GroupType.fromType(group.getType()).getTranslation());
+            title = String.format(TranslationStorage.getInstance().get("message.voicechat.group_type_title"), group.getName(), GroupType.fromType(group.getType()).getTranslation());
         }
 
-        fontRenderer.drawString(title, guiLeft + xSize / 2 - fontRenderer.getStringWidth(title) / 2, guiTop + 5, FONT_COLOR);
+        textRenderer.draw(title, guiLeft + xSize / 2 - textRenderer.getWidth(title) / 2, guiTop + 5, FONT_COLOR);
     }
 
 }

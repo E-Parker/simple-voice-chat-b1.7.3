@@ -2,18 +2,17 @@ package de.maxhenkel.voicechat.gui.volume;
 
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
-import de.maxhenkel.voicechat.extensions.GuiButtonExtension;
+import de.maxhenkel.voicechat.extensions.ButtonWidgetExtension;
 import de.maxhenkel.voicechat.gui.VoiceChatScreenBase;
 import de.maxhenkel.voicechat.gui.widgets.ListScreenEntryBase;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public abstract class VolumeEntry extends ListScreenEntryBase {
 
-    protected static final String OTHER_VOLUME = StringTranslate.getInstance().translateKey("message.voicechat.other_volume");
-    protected static final String OTHER_VOLUME_DESCRIPTION = StringTranslate.getInstance().translateKey("message.voicechat.other_volume.description");
+    protected static final String OTHER_VOLUME = TranslationStorage.getInstance().get("message.voicechat.other_volume");
+    protected static final String OTHER_VOLUME_DESCRIPTION = TranslationStorage.getInstance().get("message.voicechat.other_volume.description");
     protected static final String OTHER_VOLUME_ICON = TextureHelper.format(Voicechat.MODID, "textures/icons/other_volume.png");
 
     protected static final int SKIN_SIZE = 24;
@@ -40,13 +39,13 @@ public abstract class VolumeEntry extends ListScreenEntryBase {
         int textX = skinX + SKIN_SIZE + PADDING;
         int textY = y + (int) (slotHeight - TextureHelper.FONT_HEIGHT) / 2;
 
-        screen.drawRect(x, y, x + listWidth, y + slotHeight, BG_FILL);
+        screen.fill(x, y, x + listWidth, y + slotHeight, BG_FILL);
 
         renderElement(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, isSelected, partialTicks, skinX, skinY, textX, textY);
 
-        volumeSlider.xPosition = x + (listWidth - ((GuiButtonExtension) volumeSlider).getWidth() - PADDING);
-        volumeSlider.yPosition = y + (slotHeight - ((GuiButtonExtension) volumeSlider).getHeight()) / 2;
-        volumeSlider.drawButton(minecraft, mouseX, mouseY);
+        volumeSlider.x = x + (listWidth - ((ButtonWidgetExtension) volumeSlider).getWidth() - PADDING);
+        volumeSlider.y = y + (slotHeight - ((ButtonWidgetExtension) volumeSlider).getHeight()) / 2;
+        volumeSlider.render(minecraft, mouseX, mouseY);
     }
 
     public abstract void renderElement(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks, int skinX, int skinY, int textX, int textY);

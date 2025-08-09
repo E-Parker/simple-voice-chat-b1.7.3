@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.net;
 
 import de.maxhenkel.voicechat.Voicechat;
-import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -26,7 +26,7 @@ public class FabricNetManager extends NetManager {
                         DataInputStream stream = new DataInputStream(inputStream);
                         vcPacket.fromBytes(stream);
 
-                        c.onServerPacket(player, ((EntityPlayerMP) player).field_20908_a, vcPacket);
+                        c.onServerPacket(player, ((ServerPlayerEntity) player).networkHandler, vcPacket);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

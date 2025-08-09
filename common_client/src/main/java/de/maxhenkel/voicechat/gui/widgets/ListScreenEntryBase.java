@@ -3,14 +3,14 @@ package de.maxhenkel.voicechat.gui.widgets;
 import com.google.common.collect.Lists;
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiButton;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 import java.util.List;
 
 public abstract class ListScreenEntryBase implements GuiListExtended.IGuiListEntry {
 
     protected final Minecraft mc;
-    protected final List<GuiButton> children;
+    protected final List<ButtonWidget> children;
     protected boolean selected;
 
     public ListScreenEntryBase() {
@@ -18,7 +18,7 @@ public abstract class ListScreenEntryBase implements GuiListExtended.IGuiListEnt
         mc = MinecraftAccessor.getMinecraft();
     }
 
-    public List<? extends GuiButton> children() {
+    public List<? extends ButtonWidget> children() {
         return children;
     }
 
@@ -34,8 +34,8 @@ public abstract class ListScreenEntryBase implements GuiListExtended.IGuiListEnt
 
     @Override
     public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
-        for (GuiButton button : children) {
-            if (button.mousePressed(mc, mouseX, mouseY)) {
+        for (ButtonWidget button : children) {
+            if (button.isMouseOver(mc, mouseX, mouseY)) {
                 return true;
             }
         }
@@ -44,7 +44,7 @@ public abstract class ListScreenEntryBase implements GuiListExtended.IGuiListEnt
 
     @Override
     public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
-        for (GuiButton button : children) {
+        for (ButtonWidget button : children) {
             button.mouseReleased(x, y);
         }
     }

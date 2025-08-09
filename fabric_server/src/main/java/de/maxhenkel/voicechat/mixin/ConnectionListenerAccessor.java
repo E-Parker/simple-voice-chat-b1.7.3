@@ -1,13 +1,13 @@
 package de.maxhenkel.voicechat.mixin;
 
-import net.minecraft.src.NetworkListenThread;
+import net.minecraft.server.network.ConnectionListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.net.ServerSocket;
 
-@Mixin(NetworkListenThread.class)
-public interface NetworkListenThreadAccessor {
+@Mixin(ConnectionListener.class)
+public interface ConnectionListenerAccessor {
     @Accessor
-    ServerSocket getServerSocket();
+    ServerSocket getSocket();
 }

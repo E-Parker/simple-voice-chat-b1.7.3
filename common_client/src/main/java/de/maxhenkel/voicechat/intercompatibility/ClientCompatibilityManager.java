@@ -2,9 +2,9 @@ package de.maxhenkel.voicechat.intercompatibility;
 
 import de.maxhenkel.voicechat.service.Service;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechatConnection;
-import net.minecraft.src.KeyBinding;
-import net.minecraft.src.Entity;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.network.Connection;
 
 import java.net.SocketAddress;
 import java.util.function.Consumer;
@@ -43,7 +43,7 @@ public abstract class ClientCompatibilityManager {
 
     public abstract void onPublishServer(Consumer<Integer> onPublishServer);
 
-    public abstract SocketAddress getSocketAddress(NetworkManager connection);
+    public abstract SocketAddress getSocketAddress(Connection connection);
 
     public interface RenderNameplateEvent {
         void render(Entity entity, String str, double x, double y, double z, int maxDistance);

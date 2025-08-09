@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.mixin;
 
 import de.maxhenkel.voicechat.Voicechat;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.IOException;
 import java.util.Properties;
 
-@Mixin(StringTranslate.class)
-public class StringTranslateMixin {
+@Mixin(TranslationStorage.class)
+public class TranslationStorageMixin {
     private final Properties voiceChatLangTable = new Properties();
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -25,7 +25,7 @@ public class StringTranslateMixin {
         }
     }
 
-    @Redirect(method = "translateKeyFormat", at = @At(value = "INVOKE", target = "Ljava/util/Properties;getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"))
+    @Redirect(method = "get(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;", at = @At(value = "INVOKE", target = "Ljava/util/Properties;getProperty(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"))
     public String useVoiceChatLangTranslationInFormat(Properties instance, String key, String defaultValue) {
         String translation = voiceChatLangTable.getProperty(key);
 
@@ -35,7 +35,7 @@ public class StringTranslateMixin {
             return instance.getProperty(key, defaultValue);
     }
 
-    @Inject(method = "translateKey", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "get(Ljava/lang/String;)Ljava/lang/String;", at = @At("HEAD"), cancellable = true)
     public void useVoiceChatLangTranslation(String par1, CallbackInfoReturnable<String> cir) {
         String translation = voiceChatLangTable.getProperty(par1);
 

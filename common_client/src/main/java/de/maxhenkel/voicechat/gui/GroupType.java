@@ -1,12 +1,12 @@
 package de.maxhenkel.voicechat.gui;
 
 import de.maxhenkel.voicechat.api.Group;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public enum GroupType {
-    NORMAL(StringTranslate.getInstance().translateKey("message.voicechat.group_type.normal"), StringTranslate.getInstance().translateKey("message.voicechat.group_type.normal.description"), Group.Type.NORMAL),
-    OPEN(StringTranslate.getInstance().translateKey("message.voicechat.group_type.open"), StringTranslate.getInstance().translateKey("message.voicechat.group_type.open.description"), Group.Type.OPEN),
-    ISOLATED(StringTranslate.getInstance().translateKey("message.voicechat.group_type.isolated"), StringTranslate.getInstance().translateKey("message.voicechat.group_type.isolated.description"), Group.Type.ISOLATED);
+    NORMAL(TranslationStorage.getInstance().get("message.voicechat.group_type.normal"), TranslationStorage.getInstance().get("message.voicechat.group_type.normal.description"), Group.Type.NORMAL),
+    OPEN(TranslationStorage.getInstance().get("message.voicechat.group_type.open"), TranslationStorage.getInstance().get("message.voicechat.group_type.open.description"), Group.Type.OPEN),
+    ISOLATED(TranslationStorage.getInstance().get("message.voicechat.group_type.isolated"), TranslationStorage.getInstance().get("message.voicechat.group_type.isolated.description"), Group.Type.ISOLATED);
 
     private final String translation;
     private final String description;

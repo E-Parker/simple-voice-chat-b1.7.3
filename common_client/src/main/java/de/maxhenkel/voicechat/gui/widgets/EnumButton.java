@@ -13,7 +13,7 @@ public abstract class EnumButton<T extends Enum<T>> extends ButtonBase {
     }
 
     protected void updateText() {
-        displayString = getText(entry.get());
+        text = getText(entry.get());
     }
 
     protected abstract String getText(T type);

@@ -1,21 +1,18 @@
 package de.maxhenkel.voicechat.intercompatibility;
 
 import de.maxhenkel.voicechat.MinecraftAccessor;
-import de.maxhenkel.voicechat.extensions.NetClientHandlerExtension;
 import de.maxhenkel.voicechat.mixin.NetworkManagerAccessor;
 import de.maxhenkel.voicechat.util.KeyBindingHelper;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechatConnection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Entity;
-import net.minecraft.src.KeyBinding;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.network.Connection;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -61,7 +58,7 @@ public class FabricClientCompatibilityManager extends ClientCompatibilityManager
         if (minecraft == null)
             minecraft = MinecraftAccessor.getMinecraft();
 
-        if (minecraft.thePlayer == null /*|| entity.isInvisibleTo(minecraft.player)*/) {
+        if (minecraft.player == null /*|| entity.isInvisibleTo(minecraft.player)*/) {
             return;
         }
         renderNameplateEvents.forEach(renderNameplateEvent -> renderNameplateEvent.render(entity, str, x, y, z, maxDistance));
@@ -92,11 +89,11 @@ public class FabricClientCompatibilityManager extends ClientCompatibilityManager
         joinWorldEvents.forEach(Runnable::run);
     }
 
-    public void onJoinWorld(Entity entity) {
+    public void spawnEntity(Entity entity) {
         if (minecraft == null)
             minecraft = MinecraftAccessor.getMinecraft();
 
-        if (entity != minecraft.thePlayer) {
+        if (entity != minecraft.player) {
             return;
         }
         joinWorldEvents.forEach(Runnable::run);
@@ -128,7 +125,7 @@ public class FabricClientCompatibilityManager extends ClientCompatibilityManager
 
     @Override
     public int getBoundKeyOf(KeyBinding keyBinding) {
-        return keyBinding.keyCode;
+        return keyBinding.code;
     }
 
     @Override
@@ -189,14 +186,14 @@ public class FabricClientCompatibilityManager extends ClientCompatibilityManager
     }
 
     @Override
-    public SocketAddress getSocketAddress(NetworkManager connection) {
+    public SocketAddress getSocketAddress(Connection connection) {
         if (connection != null) {
-            Socket socket = ((NetworkManagerAccessor) connection).getNetworkSocket();
+            Socket socket = ((NetworkManagerAccessor) connection).getSocket();
             if (socket != null)
                 return socket.getRemoteSocketAddress();
         }
 
-        String lastServer = MinecraftAccessor.getMinecraft().gameSettings.lastServer;
+        String lastServer = MinecraftAccessor.getMinecraft().options.lastServer;
 
         if (lastServer != null) {
             String[] split = lastServer.replaceAll("_", ":").split(":");

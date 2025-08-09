@@ -7,8 +7,8 @@ import de.maxhenkel.voicechat.debug.CooldownTimer;
 import de.maxhenkel.voicechat.voice.client.speaker.SpeakerException;
 import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayerSP;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.entity.player.ClientPlayerEntity;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -153,17 +153,17 @@ public class ClientVoicechat implements ClientVoicechatApi {
             return false;
         }
         Minecraft mc = MinecraftAccessor.getMinecraft();
-        EntityPlayerSP player = mc.thePlayer;
+        ClientPlayerEntity player = mc.player;
         if (recording) {
             if (connection == null || !connection.getData().allowRecording()) {
                 if (player != null) {
-                    mc.ingameGUI.addChatMessage(StringTranslate.getInstance().translateKey("message.voicechat.recording_disabled"));
+                    mc.inGameHud.addChatMessage(TranslationStorage.getInstance().get("message.voicechat.recording_disabled"));
                 }
                 return false;
             }
             recorder = AudioRecorder.create();
             if (player != null) {
-                mc.ingameGUI.addChatMessage("§4" + StringTranslate.getInstance().translateKey("message.voicechat.recording_started"));
+                mc.inGameHud.addChatMessage("§4" + TranslationStorage.getInstance().get("message.voicechat.recording_started"));
             }
             return true;
         }
@@ -171,7 +171,7 @@ public class ClientVoicechat implements ClientVoicechatApi {
         AudioRecorder rec = recorder;
         recorder = null;
         if (player != null) {
-            mc.ingameGUI.addChatMessage("§4" + StringTranslate.getInstance().translateKey("message.voicechat.recording_stopped"));
+            mc.inGameHud.addChatMessage("§4" + TranslationStorage.getInstance().get("message.voicechat.recording_stopped"));
         }
         rec.saveAndClose();
         return true;

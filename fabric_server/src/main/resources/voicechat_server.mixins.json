@@ -5,10 +5,10 @@
   "package": "de.maxhenkel.voicechat.mixin",
   "mixins": [
     "EntityMixin",
-    "EntityPlayerMixin",
+    "PlayerEntityMixin",
     "MinecraftServerMixin",
     "NetHandlerMixin",
-    "NetworkListenThreadAccessor",
+    "ConnectionListenerAccessor",
     "PacketMixin",
     "ServerConfigurationManagerMixin"
   ],

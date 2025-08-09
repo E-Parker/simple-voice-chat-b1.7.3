@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.extensions;
 
-import net.minecraft.src.Packet;
+import net.minecraft.network.packet.Packet;
 
-public interface NetHandlerExtension {
+public interface NetworkHandlerExtension {
     void processCustomPayload(Packet packet);
 }

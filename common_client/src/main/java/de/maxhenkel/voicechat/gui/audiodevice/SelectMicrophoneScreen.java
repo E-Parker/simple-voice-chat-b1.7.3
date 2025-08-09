@@ -6,8 +6,8 @@ import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechat;
 import de.maxhenkel.voicechat.voice.client.microphone.MicrophoneManager;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.List;
 public class SelectMicrophoneScreen extends SelectDeviceScreen {
 
     protected static final String MICROPHONE_ICON = TextureHelper.format(Voicechat.MODID, "textures/icons/microphone.png");
-    protected static final String TITLE = StringTranslate.getInstance().translateKey("gui.voicechat.select_microphone.title");
-    protected static final String NO_MICROPHONE = StringTranslate.getInstance().translateKey("message.voicechat.no_microphone");
+    protected static final String TITLE = TranslationStorage.getInstance().get("gui.voicechat.select_microphone.title");
+    protected static final String NO_MICROPHONE = TranslationStorage.getInstance().get("message.voicechat.no_microphone");
 
-    public SelectMicrophoneScreen(@Nullable GuiScreen parent) {
+    public SelectMicrophoneScreen(@Nullable Screen parent) {
         super(TITLE, parent);
     }
 

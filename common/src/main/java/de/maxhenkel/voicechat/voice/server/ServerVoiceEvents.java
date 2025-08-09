@@ -1,12 +1,12 @@
 package de.maxhenkel.voicechat.voice.server;
 
 import de.maxhenkel.voicechat.Voicechat;
-import de.maxhenkel.voicechat.extensions.EntityPlayerExtension;
+import de.maxhenkel.voicechat.extensions.PlayerEntityExtension;
 import de.maxhenkel.voicechat.intercompatibility.CommonCompatibilityManager;
 import de.maxhenkel.voicechat.net.NetManager;
 import de.maxhenkel.voicechat.net.SecretPacket;
 import de.maxhenkel.voicechat.plugins.PluginManager;
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -26,10 +26,10 @@ public class ServerVoiceEvents {
         CommonCompatibilityManager.INSTANCE.onServerStopping(this::serverStopping);
 
         CommonCompatibilityManager.INSTANCE.getNetManager().requestSecretChannel.setServerListener((player, handler, packet) -> {
-            Voicechat.LOGGER.info("Received secret request of {} ({})", player.username, packet.getCompatibilityVersion());
-            clientCompatibilities.put(((EntityPlayerExtension) player).getUniqueID(), packet.getCompatibilityVersion());
+            Voicechat.LOGGER.info("Received secret request of {} ({})", player.name, packet.getCompatibilityVersion());
+            clientCompatibilities.put(((PlayerEntityExtension) player).getUniqueID(), packet.getCompatibilityVersion());
             if (packet.getCompatibilityVersion() != Voicechat.COMPATIBILITY_VERSION) {
-                Voicechat.LOGGER.warn("Connected client {} has incompatible voice chat version (server={}, client={})", player.username, Voicechat.COMPATIBILITY_VERSION, packet.getCompatibilityVersion());
+                Voicechat.LOGGER.warn("Connected client {} has incompatible voice chat version (server={}, client={})", player.name, Voicechat.COMPATIBILITY_VERSION, packet.getCompatibilityVersion());
                 //player.sendMessage(getIncompatibleMessage(packet.getCompatibilityVersion()));
             } else {
                 initializePlayerConnection(player);
@@ -37,8 +37,8 @@ public class ServerVoiceEvents {
         });
     }
 
-    public boolean isCompatible(EntityPlayer player) {
-        return isCompatible(((EntityPlayerExtension) player).getUniqueID());
+    public boolean isCompatible(PlayerEntity player) {
+        return isCompatible(((PlayerEntityExtension) player).getUniqueID());
     }
 
     public boolean isCompatible(UUID playerUuid) {
@@ -71,31 +71,31 @@ public class ServerVoiceEvents {
         }
     }
 
-    public void initializePlayerConnection(EntityPlayer player) {
+    public void initializePlayerConnection(PlayerEntity player) {
         if (server == null) {
             return;
         }
         CommonCompatibilityManager.INSTANCE.emitPlayerCompatibilityCheckSucceeded(player);
 
-        UUID secret = server.getSecret(((EntityPlayerExtension) player).getUniqueID());
+        UUID secret = server.getSecret(((PlayerEntityExtension) player).getUniqueID());
         NetManager.sendToClient(player, new SecretPacket(player, secret, server.getPort(), Voicechat.SERVER_CONFIG));
-        Voicechat.LOGGER.info("Sent secret to {}", player.username);
+        Voicechat.LOGGER.info("Sent secret to {}", player.name);
     }
 
-    public void playerLoggedIn(EntityPlayer serverPlayer) {
+    public void playerLoggedIn(PlayerEntity serverPlayer) {
         if (!Voicechat.SERVER_CONFIG.forceVoiceChat.get()) {
             return;
         }
     }
 
-    public void playerLoggedOut(EntityPlayer player) {
-        clientCompatibilities.remove(((EntityPlayerExtension) player).getUniqueID());
+    public void playerLoggedOut(PlayerEntity player) {
+        clientCompatibilities.remove(((PlayerEntityExtension) player).getUniqueID());
         if (server == null) {
             return;
         }
 
-        server.disconnectClient(((EntityPlayerExtension) player).getUniqueID());
-        Voicechat.LOGGER.info("Disconnecting client {}", player.username);
+        server.disconnectClient(((PlayerEntityExtension) player).getUniqueID());
+        Voicechat.LOGGER.info("Disconnecting client {}", player.name);
     }
 
     @Nullable

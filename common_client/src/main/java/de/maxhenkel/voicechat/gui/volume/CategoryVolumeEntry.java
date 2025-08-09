@@ -1,11 +1,10 @@
 package de.maxhenkel.voicechat.gui.volume;
 
 import de.maxhenkel.voicechat.VoicechatClient;
-import de.maxhenkel.voicechat.extensions.GuiExtension;
+import de.maxhenkel.voicechat.extensions.DrawContextExtension;
 import de.maxhenkel.voicechat.plugins.impl.VolumeCategoryImpl;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
-import net.minecraft.src.Gui;
 import org.lwjgl.opengl.GL11;
 
 public class CategoryVolumeEntry extends VolumeEntry {
@@ -27,8 +26,8 @@ public class CategoryVolumeEntry extends VolumeEntry {
     public void renderElement(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks, int skinX, int skinY, int textX, int textY) {
         GL11.glColor4f(1F, 1F, 1F, 1F);
         TextureHelper.bindTexture(texture);
-        ((GuiExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 16, 16, 16, 16, SKIN_SIZE, SKIN_SIZE, 16, 16);
-        minecraft.fontRenderer.drawString(category.getName(), textX, textY, PLAYER_NAME_COLOR);
+        ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 16, 16, 16, 16, SKIN_SIZE, SKIN_SIZE, 16, 16);
+        minecraft.textRenderer.draw(category.getName(), textX, textY, PLAYER_NAME_COLOR);
         if (isSelected && category.getDescription() != null) {
             screen.postRender(() -> {
                 screen.drawHoveringText(category.getDescription(), mouseX, mouseY);

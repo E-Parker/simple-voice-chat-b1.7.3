@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.plugins.impl;
 
 import de.maxhenkel.voicechat.api.ServerLevel;
-import net.minecraft.src.World;
+import net.minecraft.world.World;
 
 public class ServerLevelImpl implements ServerLevel {
 

@@ -11,7 +11,7 @@ import de.maxhenkel.voicechat.voice.common.LocationSoundPacket;
 import de.maxhenkel.voicechat.voice.common.Utils;
 import de.maxhenkel.voicechat.voice.server.Server;
 import de.maxhenkel.voicechat.voice.server.ServerWorldUtils;
-import net.minecraft.src.World;
+import net.minecraft.world.World;
 
 import java.util.UUID;
 

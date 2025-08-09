@@ -1,11 +1,11 @@
 package de.maxhenkel.voicechat.gui.widgets;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.TranslationStorage;
 import org.lwjgl.opengl.GL11;
 
-public class GuiSliderModern extends GuiButton {
+public class GuiSliderModern extends ButtonWidget {
     private float sliderPosition = 1.0F;
     public boolean isMouseDown;
     private final String name;
@@ -23,7 +23,7 @@ public class GuiSliderModern extends GuiButton {
         this.sliderPosition = (defaultValue - minIn) / (maxIn - minIn);
         this.formatHelper = formatter;
         this.responder = guiResponder;
-        this.displayString = this.getDisplayString();
+        this.text = this.getDisplayString();
     }
 
     public float getSliderValue()
@@ -34,7 +34,7 @@ public class GuiSliderModern extends GuiButton {
     public void setSliderValue(float value, boolean notifyResponder)
     {
         this.sliderPosition = (value - this.min) / (this.max - this.min);
-        this.displayString = this.getDisplayString();
+        this.text = this.getDisplayString();
 
         if (notifyResponder)
         {
@@ -49,21 +49,21 @@ public class GuiSliderModern extends GuiButton {
 
     private String getDisplayString()
     {
-        return this.formatHelper == null ? StringTranslate.getInstance().translateKey(this.name) + ": " + this.getSliderValue() : this.formatHelper.getText(this.id, StringTranslate.getInstance().translateKey(this.name), this.getSliderValue());
+        return this.formatHelper == null ? TranslationStorage.getInstance().get(this.name) + ": " + this.getSliderValue() : this.formatHelper.getText(this.id, TranslationStorage.getInstance().get(this.name), this.getSliderValue());
     }
 
-    protected int getHoverState(boolean mouseOver)
+    protected int getYImage(boolean mouseOver)
     {
         return 0;
     }
 
-    protected void mouseDragged(Minecraft mc, int mouseX, int mouseY)
+    protected void renderBackground(Minecraft mc, int mouseX, int mouseY)
     {
-        if (this.enabled2)
+        if (this.visible)
         {
             if (this.isMouseDown)
             {
-                this.sliderPosition = (float)(mouseX - (this.xPosition + 4)) / (float)(this.width - 8);
+                this.sliderPosition = (float)(mouseX - (this.x + 4)) / (float)(this.width - 8);
 
                 if (this.sliderPosition < 0.0F)
                 {
@@ -75,28 +75,28 @@ public class GuiSliderModern extends GuiButton {
                     this.sliderPosition = 1.0F;
                 }
 
-                this.displayString = this.getDisplayString();
+                this.text = this.getDisplayString();
                 this.responder.setEntryValue(this.id, this.getSliderValue());
             }
 
             GL11.glColor4f(1F, 1F, 1F, 1F);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderPosition * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderPosition * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
+            this.drawTexture(this.x + (int)(this.sliderPosition * (float)(this.width - 8)), this.y, 0, 66, 4, 20);
+            this.drawTexture(this.x + (int)(this.sliderPosition * (float)(this.width - 8)) + 4, this.y, 196, 66, 4, 20);
         }
     }
 
     public void setSliderPosition(float position)
     {
         this.sliderPosition = position;
-        this.displayString = this.getDisplayString();
+        this.text = this.getDisplayString();
         this.responder.setEntryValue(this.id, this.getSliderValue());
     }
 
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
+    public boolean isMouseOver(Minecraft mc, int mouseX, int mouseY)
     {
-        if (super.mousePressed(mc, mouseX, mouseY))
+        if (super.isMouseOver(mc, mouseX, mouseY))
         {
-            this.sliderPosition = (float)(mouseX - (this.xPosition + 4)) / (float)(this.width - 8);
+            this.sliderPosition = (float)(mouseX - (this.x + 4)) / (float)(this.width - 8);
 
             if (this.sliderPosition < 0.0F)
             {
@@ -108,7 +108,7 @@ public class GuiSliderModern extends GuiButton {
                 this.sliderPosition = 1.0F;
             }
 
-            this.displayString = this.getDisplayString();
+            this.text = this.getDisplayString();
             this.responder.setEntryValue(this.id, this.getSliderValue());
             this.isMouseDown = true;
             return true;

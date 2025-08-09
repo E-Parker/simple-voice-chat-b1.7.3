@@ -6,8 +6,7 @@ import de.maxhenkel.voicechat.gui.widgets.ListScreenListBase;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.common.ClientGroup;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +42,7 @@ public class JoinGroupList extends ListScreenListBase<JoinGroupEntry> {
     }
 
     public static void update() {
-        GuiScreen screen = MinecraftAccessor.getMinecraft().currentScreen;
+        Screen screen = MinecraftAccessor.getMinecraft().currentScreen;
         if (screen instanceof JoinGroupScreen) {
             JoinGroupScreen joinGroupScreen = (JoinGroupScreen) screen;
             if (joinGroupScreen.groupList != null) {

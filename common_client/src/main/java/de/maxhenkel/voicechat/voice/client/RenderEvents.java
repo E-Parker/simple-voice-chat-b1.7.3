@@ -3,14 +3,14 @@ package de.maxhenkel.voicechat.voice.client;
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
 import de.maxhenkel.voicechat.VoicechatClient;
-import de.maxhenkel.voicechat.extensions.GuiExtension;
+import de.maxhenkel.voicechat.extensions.DrawContextExtension;
 import de.maxhenkel.voicechat.intercompatibility.ClientCompatibilityManager;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ScaledResolution;
-import net.minecraft.src.Tessellator;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.util.ScreenScaler;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -77,7 +77,7 @@ public class RenderEvents {
     private void renderIcon(String texture) {
         GL11.glPushMatrix();
         GL11.glColor4f(1F, 1F, 1F, 1F);
-        ScaledResolution scaledResolution = new ScaledResolution(minecraft.displayWidth, minecraft.displayHeight);
+        ScreenScaler scaledResolution = new ScreenScaler(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
         TextureHelper.bindTexture(texture);
         int posX = VoicechatClient.CLIENT_CONFIG.hudIconPosX.get();
         int posY = VoicechatClient.CLIENT_CONFIG.hudIconPosY.get();
@@ -91,7 +91,7 @@ public class RenderEvents {
         float scale = VoicechatClient.CLIENT_CONFIG.hudIconScale.get().floatValue();
         GL11.glScalef(scale, scale, 1F);
 
-        GuiExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -16 : 0, posY < 0 ? -16 : 0, 0, 0, 16, 16, 16, 16);
+        DrawContextExtension.staticDrawModalRectWithCustomSizedTexture(posX < 0 ? -16 : 0, posY < 0 ? -16 : 0, 0, 0, 16, 16, 16, 16);
         GL11.glPopMatrix();
     }
 
@@ -102,11 +102,11 @@ public class RenderEvents {
         if (VoicechatClient.CLIENT_CONFIG.hideIcons.get()) {
             return;
         }
-        if (!(entity instanceof EntityPlayer)) {
+        if (!(entity instanceof PlayerEntity)) {
             return;
         }
-        EntityPlayer player = (EntityPlayer) entity;
-        if (entity == minecraft.thePlayer) {
+        PlayerEntity player = (PlayerEntity) entity;
+        if (entity == minecraft.player) {
             return;
         }
 
@@ -129,7 +129,7 @@ public class RenderEvents {
         }
     }
 
-    private void renderPlayerIcon(EntityPlayer entity, String str, double x, double y, double z, int maxDistance, String texture) {
+    private void renderPlayerIcon(PlayerEntity entity, String str, double x, double y, double z, int maxDistance, String texture) {
         boolean isThirdPersonFrontal = false;
         int verticalShift = "deadmau5".equals(str) ? -10 : 0;
 
@@ -138,8 +138,8 @@ public class RenderEvents {
         GL11.glPushMatrix();
         GL11.glTranslated(x, y + height, z);
         GL11.glNormal3f(0F, 1F, 0F);
-        GL11.glRotatef(-minecraft.thePlayer.rotationYaw, 0F, 1F, 0F);
-        GL11.glRotatef((float) (isThirdPersonFrontal ? -1 : 1) * minecraft.thePlayer.rotationPitch, 1F, 0F, 0F);
+        GL11.glRotatef(-minecraft.player.yaw, 0F, 1F, 0F);
+        GL11.glRotatef((float) (isThirdPersonFrontal ? -1 : 1) * minecraft.player.pitch, 1F, 0F, 0F);
         GL11.glScalef(-0.025F, -0.025F, 0.025F);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDepthMask(false);
@@ -150,7 +150,7 @@ public class RenderEvents {
 
         GL11.glEnable(GL11.GL_BLEND);
         GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        int halfNameWidth = minecraft.fontRenderer.getStringWidth(str) / 2;
+        int halfNameWidth = minecraft.textRenderer.getWidth(str) / 2;
         GL11.glTranslatef(halfNameWidth, verticalShift - 1F, 0F);
         if (!entity.isSneaking()) {
             drawIcon(texture, true);
@@ -167,17 +167,17 @@ public class RenderEvents {
 
     private void drawIcon(String texture, boolean transparent) {
         TextureHelper.bindTexture(texture);
-        Tessellator tessellator = Tessellator.instance;
+        Tessellator tessellator = Tessellator.INSTANCE;
 
-        tessellator.startDrawing(7);
-        tessellator.setColorRGBA(255, 255, 255, transparent ? 32 : 255);
-        tessellator.addVertexWithUV(2D, 10D, 0D, 0D, 1D);
-        tessellator.setColorRGBA(255, 255, 255, transparent ? 32 : 255);
-        tessellator.addVertexWithUV(2D + 10D, 10D, 0D, 1D, 1D);
-        tessellator.setColorRGBA(255, 255, 255, transparent ? 32 : 255);
-        tessellator.addVertexWithUV(2D + 10D, 0D, 0D, 1D, 0D);
-        tessellator.setColorRGBA(255, 255, 255, transparent ? 32 : 255);
-        tessellator.addVertexWithUV(2D, 0D, 0D, 0D, 0D);
+        tessellator.start(7);
+        tessellator.color(255, 255, 255, transparent ? 32 : 255);
+        tessellator.vertex(2D, 10D, 0D, 0D, 1D);
+        tessellator.color(255, 255, 255, transparent ? 32 : 255);
+        tessellator.vertex(2D + 10D, 10D, 0D, 1D, 1D);
+        tessellator.color(255, 255, 255, transparent ? 32 : 255);
+        tessellator.vertex(2D + 10D, 0D, 0D, 1D, 0D);
+        tessellator.color(255, 255, 255, transparent ? 32 : 255);
+        tessellator.vertex(2D, 0D, 0D, 0D, 0D);
         tessellator.draw();
     }
 
@@ -185,7 +185,7 @@ public class RenderEvents {
         if (ClientManager.getClient() != null && ClientManager.getClient().getConnection() != null && ClientManager.getClient().getConnection().isInitialized()) {
             return true;
         }
-        return minecraft.isMultiplayerWorld();
+        return minecraft.isWorldRemote();
     }
 
 }

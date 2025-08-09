@@ -9,9 +9,9 @@ import de.maxhenkel.voicechat.voice.client.SoundManager;
 import de.maxhenkel.voicechat.voice.common.NamedThreadPoolFactory;
 import de.maxhenkel.voicechat.voice.common.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.Vec3D;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
@@ -83,7 +83,7 @@ public abstract class ALSpeakerBase implements Speaker {
     }
 
     @Override
-    public void play(short[] data, float volume, @Nullable Vec3D position, @Nullable String category, float maxDistance) {
+    public void play(short[] data, float volume, @Nullable Vec3d position, @Nullable String category, float maxDistance) {
         runInContext(() -> {
             removeProcessedBuffersSync();
             int buffers = getQueuedBuffersSync();
@@ -107,7 +107,7 @@ public abstract class ALSpeakerBase implements Speaker {
         return VoicechatClient.CLIENT_CONFIG.outputBufferSize.get();
     }
 
-    protected void writeSync(short[] data, float volume, @Nullable Vec3D position, @Nullable String category, float maxDistance) {
+    protected void writeSync(short[] data, float volume, @Nullable Vec3d position, @Nullable String category, float maxDistance) {
         PluginManager.instance().onALSound(source, audioChannelId, position, category, OpenALSoundEvent.Pre.class);
         setPositionSync(position, maxDistance);
         PluginManager.instance().onALSound(source, audioChannelId, position, category, OpenALSoundEvent.class);
@@ -139,7 +139,7 @@ public abstract class ALSpeakerBase implements Speaker {
         PluginManager.instance().onALSound(source, audioChannelId, position, category, OpenALSoundEvent.Post.class);
     }
 
-    protected float getVolume(float volume, @Nullable Vec3D position, float maxDistance) {
+    protected float getVolume(float volume, @Nullable Vec3d position, float maxDistance) {
         return volume;
     }
 
@@ -153,7 +153,7 @@ public abstract class ALSpeakerBase implements Speaker {
 
     protected abstract int getFormat();
 
-    protected ShortBuffer convert(short[] data, @Nullable Vec3D position) {
+    protected ShortBuffer convert(short[] data, @Nullable Vec3d position) {
         return toShortBuffer(data);
     }
 
@@ -161,18 +161,18 @@ public abstract class ALSpeakerBase implements Speaker {
         return BufferUtils.createShortBuffer(data.length).put(data);
     }
 
-    protected void setPositionSync(@Nullable Vec3D soundPos, float maxDistance) {
-        EntityPlayer player = mc.thePlayer;
-        Vec3D position = Vec3D.createVector(player.posX, player.posY, player.posZ);
-        Vec3D look = getVectorForRotation(player.rotationPitch, player.rotationYaw);
+    protected void setPositionSync(@Nullable Vec3d soundPos, float maxDistance) {
+        PlayerEntity player = mc.player;
+        Vec3d position = Vec3d.createCached(player.x, player.y, player.z);
+        Vec3d look = getVectorForRotation(player.pitch, player.yaw);
         // Vector3f up = camera.getUpVector();
-        AL10.alListener3f(AL10.AL_POSITION, (float) position.xCoord, (float) position.yCoord, (float) position.zCoord);
+        AL10.alListener3f(AL10.AL_POSITION, (float) position.x, (float) position.y, (float) position.z);
         SoundManager.checkAlError();
         // TODO check
-        Vec3D up = Vec3D.createVector(look.xCoord, look.yCoord, look.zCoord);
-        up.rotateAroundX(-90F);
+        Vec3d up = Vec3d.createCached(look.x, look.y, look.z);
+        up.rotateX(-90F);
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(7);
-        floatBuffer.put(new float[]{(float) look.xCoord, (float) look.yCoord, (float) look.zCoord, (float) up.xCoord, (float) up.yCoord, (float) up.zCoord});
+        floatBuffer.put(new float[]{(float) look.x, (float) look.y, (float) look.z, (float) up.x, (float) up.y, (float) up.z});
         floatBuffer.flip();
         AL10.alListener(AL10.AL_ORIENTATION, floatBuffer);
         // AL10.alListenerfv(AL10.AL_ORIENTATION, new float[]{look.x(), look.y(), look.z(), up.x(), up.y(), up.z()});
@@ -181,7 +181,7 @@ public abstract class ALSpeakerBase implements Speaker {
             linearAttenuation(maxDistance);
             AL10.alSourcei(source, AL10.AL_SOURCE_RELATIVE, AL10.AL_FALSE);
             SoundManager.checkAlError();
-            AL10.alSource3f(source, AL10.AL_POSITION, (float) soundPos.xCoord, (float) soundPos.yCoord, (float) soundPos.zCoord);
+            AL10.alSource3f(source, AL10.AL_POSITION, (float) soundPos.x, (float) soundPos.y, (float) soundPos.z);
             SoundManager.checkAlError();
         } else {
             linearAttenuation(48F);
@@ -193,12 +193,12 @@ public abstract class ALSpeakerBase implements Speaker {
     }
 
     //TODO check
-    protected final Vec3D getVectorForRotation(float pitch, float yaw) {
+    protected final Vec3d getVectorForRotation(float pitch, float yaw) {
         float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
         float f2 = -MathHelper.cos(-pitch * 0.017453292F);
         float f3 = MathHelper.sin(-pitch * 0.017453292F);
-        return Vec3D.createVector((double) (f1 * f2), (double) f3, (double) (f * f2));
+        return Vec3d.createCached((double) (f1 * f2), (double) f3, (double) (f * f2));
     }
 
     @Override

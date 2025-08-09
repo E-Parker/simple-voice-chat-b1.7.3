@@ -2,7 +2,7 @@ package de.maxhenkel.voicechat.gui.audiodevice;
 
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
-import de.maxhenkel.voicechat.extensions.GuiExtension;
+import de.maxhenkel.voicechat.extensions.DrawContextExtension;
 import de.maxhenkel.voicechat.gui.VoiceChatScreenBase;
 import de.maxhenkel.voicechat.gui.widgets.ListScreenEntryBase;
 import de.maxhenkel.voicechat.util.TextureHelper;
@@ -36,22 +36,22 @@ public class AudioDeviceEntry extends ListScreenEntryBase {
         super.drawEntry(slotIndex, x, y, listWidth, slotHeight, mouseX, mouseY, isSelected, partialTicks);
         boolean selected = parent.getSelectedDevice().equals(device);
         if (selected) {
-            parent.drawRect(x, y, x + listWidth, y + slotHeight, BG_FILL_SELECTED);
+            parent.fill(x, y, x + listWidth, y + slotHeight, BG_FILL_SELECTED);
         } else if (isSelected) {
-            parent.drawRect(x, y, x + listWidth, y + slotHeight, BG_FILL_HOVERED);
+            parent.fill(x, y, x + listWidth, y + slotHeight, BG_FILL_HOVERED);
         } else {
-            parent.drawRect(x, y, x + listWidth, y + slotHeight, BG_FILL);
+            parent.fill(x, y, x + listWidth, y + slotHeight, BG_FILL);
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
 
         TextureHelper.bindTexture(parent.getIcon(device));
-        ((GuiExtension) parent).drawModalRectWithCustomSizedTexture(x + PADDING, y + slotHeight / 2 - 8, 16, 16, 16, 16, 16, 16);
+        ((DrawContextExtension) parent).drawModalRectWithCustomSizedTexture(x + PADDING, y + slotHeight / 2 - 8, 16, 16, 16, 16, 16, 16);
         if (selected) {
             TextureHelper.bindTexture(SELECTED);
-            ((GuiExtension) parent).drawModalRectWithCustomSizedTexture(x + PADDING, y + slotHeight / 2 - 8, 16, 16, 16, 16, 16, 16);
+            ((DrawContextExtension) parent).drawModalRectWithCustomSizedTexture(x + PADDING, y + slotHeight / 2 - 8, 16, 16, 16, 16, 16, 16);
         }
 
-        float deviceWidth = minecraft.fontRenderer.getStringWidth(visibleDeviceName);
+        float deviceWidth = minecraft.textRenderer.getWidth(visibleDeviceName);
         float space = listWidth - PADDING - 16 - PADDING - PADDING;
         float scale = Math.min(space / deviceWidth, 1F);
 
@@ -59,7 +59,7 @@ public class AudioDeviceEntry extends ListScreenEntryBase {
         GL11.glTranslated(x + PADDING + 16 + PADDING, y + slotHeight / 2 - (TextureHelper.FONT_HEIGHT * scale) / 2, 0D);
         GL11.glScalef(scale, scale, 1F);
 
-        minecraft.fontRenderer.drawString(visibleDeviceName, 0, 0, DEVICE_NAME_COLOR);
+        minecraft.textRenderer.draw(visibleDeviceName, 0, 0, DEVICE_NAME_COLOR);
         GL11.glPopMatrix();
     }
 

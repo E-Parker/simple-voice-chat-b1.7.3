@@ -1,15 +1,15 @@
 package de.maxhenkel.voicechat;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Packet;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.Packet;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface VoicechatServer {
-    void sendToPlayer(EntityPlayer player, Packet packet);
-    EntityPlayer getPlayerByName(String name);
-    EntityPlayer getPlayerByUuid(UUID uuid);
-    List<EntityPlayer> getPlayerList();
+    void sendToPlayer(PlayerEntity player, Packet packet);
+    PlayerEntity getPlayerByName(String name);
+    PlayerEntity getPlayerByUuid(UUID uuid);
+    List<PlayerEntity> getPlayerList();
     String getServerIp();
 }

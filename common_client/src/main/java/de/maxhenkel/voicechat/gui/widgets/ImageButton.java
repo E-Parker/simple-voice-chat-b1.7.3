@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.gui.widgets;
 
 import de.maxhenkel.voicechat.MinecraftAccessor;
-import de.maxhenkel.voicechat.extensions.GuiExtension;
+import de.maxhenkel.voicechat.extensions.DrawContextExtension;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import net.minecraft.client.Minecraft;
 
@@ -27,16 +27,14 @@ public class ImageButton extends ButtonBase {
 
     protected void renderImage(int mouseX, int mouseY) {
         // oh.
-        int x = xPosition;
-        int y = yPosition;
 
         TextureHelper.bindTexture(texture);
-        ((GuiExtension) this).drawModalRectWithCustomSizedTexture(x + 2, y + 2, 0, 0, 16, 16, 16, 16);
+        ((DrawContextExtension) this).drawModalRectWithCustomSizedTexture(x + 2, y + 2, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
-    public void drawButton(Minecraft minecraft, int mouseX, int mouseY) {
-        super.drawButton(minecraft, mouseX, mouseY);
+    public void render(Minecraft minecraft, int mouseX, int mouseY) {
+        super.render(minecraft, mouseX, mouseY);
         renderImage(mouseX, mouseY);
     }
 

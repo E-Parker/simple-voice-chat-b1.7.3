@@ -1,11 +1,11 @@
 package de.maxhenkel.voicechat.extensions;
 
-import net.minecraft.src.FontRenderer;
+import net.minecraft.client.font.TextRenderer;
 
 import java.util.Arrays;
 import java.util.List;
 
-public interface FontRendererExtension {
+public interface TextRendererExtension {
     default String trimStringToWidth(String text, int width)
     {
         return this.trimStringToWidth(text, width, false);
@@ -23,7 +23,7 @@ public interface FontRendererExtension {
         for (int l = j; l >= 0 && l < text.length() && i < width; l += k)
         {
             char c0 = text.charAt(l);
-            int i1 = ((FontRenderer) this).getStringWidth("" + c0);
+            int i1 = ((TextRenderer) this).getWidth("" + c0);
 
             if (flag)
             {
@@ -115,7 +115,7 @@ public interface FontRendererExtension {
                 case ' ':
                     l = k;
                 default:
-                    j += ((FontRenderer) this).getStringWidth("" + c0);
+                    j += ((TextRenderer) this).getWidth("" + c0);
 
                     if (flag)
                     {

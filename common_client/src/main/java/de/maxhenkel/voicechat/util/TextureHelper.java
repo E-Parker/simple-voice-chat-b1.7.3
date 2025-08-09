@@ -46,13 +46,13 @@ public class TextureHelper {
                 image = imageMap.get(path);
             }
 
-            int id = mc.renderEngine.allocateAndSetupTexture(image);
+            int id = mc.textureManager.load(image);
 
             imageToIdMap.put(path, id);
-            mc.renderEngine.bindTexture(id);
+            mc.textureManager.bindTexture(id);
         } else {
             int id = imageToIdMap.get(path);
-            mc.renderEngine.bindTexture(id);
+            mc.textureManager.bindTexture(id);
         }
     }
 }

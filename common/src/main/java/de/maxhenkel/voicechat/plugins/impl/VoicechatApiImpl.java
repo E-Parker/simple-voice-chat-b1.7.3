@@ -12,8 +12,8 @@ import de.maxhenkel.voicechat.plugins.impl.mp3.Mp3DecoderImpl;
 import de.maxhenkel.voicechat.plugins.impl.mp3.Mp3EncoderImpl;
 import de.maxhenkel.voicechat.plugins.impl.opus.OpusManager;
 import de.maxhenkel.voicechat.voice.common.Utils;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
@@ -57,8 +57,8 @@ public abstract class VoicechatApiImpl implements VoicechatApi {
 
     @Override
     public Entity fromEntity(Object entity) {
-        if (entity instanceof net.minecraft.src.Entity) {
-            net.minecraft.src.Entity e = (net.minecraft.src.Entity) entity;
+        if (entity instanceof net.minecraft.entity.Entity) {
+            net.minecraft.entity.Entity e = (net.minecraft.entity.Entity) entity;
             return new EntityImpl(e);
         } else {
             throw new IllegalArgumentException("entity is not an instance of Entity");
@@ -77,8 +77,8 @@ public abstract class VoicechatApiImpl implements VoicechatApi {
 
     @Override
     public ServerPlayer fromServerPlayer(Object serverPlayer) {
-        if (serverPlayer instanceof EntityPlayer) {
-            EntityPlayer p = (EntityPlayer) serverPlayer;
+        if (serverPlayer instanceof PlayerEntity) {
+            PlayerEntity p = (PlayerEntity) serverPlayer;
             return new ServerPlayerImpl(p);
         } else {
             throw new IllegalArgumentException("serverPlayer is not an instance of ServerPlayer");

@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.voice.client;
 
-import net.minecraft.src.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.util.vector.Vector2f;
 
 public class Utils extends de.maxhenkel.voicechat.voice.common.Utils {

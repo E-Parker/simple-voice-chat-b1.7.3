@@ -2,15 +2,14 @@ package de.maxhenkel.voicechat.voice.client;
 
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
-import de.maxhenkel.voicechat.extensions.NetClientHandlerExtension;
+import de.maxhenkel.voicechat.extensions.ClientNetworkHandlerExtension;
 import de.maxhenkel.voicechat.intercompatibility.ClientCompatibilityManager;
 import de.maxhenkel.voicechat.intercompatibility.CommonCompatibilityManager;
 import de.maxhenkel.voicechat.net.*;
 import de.maxhenkel.voicechat.voice.server.Server;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayerSP;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.network.ClientNetworkHandler;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
@@ -64,10 +63,11 @@ public class ClientManager {
         if (client.getConnection() != null) {
             ClientCompatibilityManager.INSTANCE.emitVoiceChatDisconnectedEvent();
         }
-        NetClientHandler connection = minecraft.func_20001_q();
+
+        ClientNetworkHandler connection = minecraft.getNetworkHandler();
         if (connection != null) {
             try {
-                SocketAddress socketAddress = ClientCompatibilityManager.INSTANCE.getSocketAddress(((NetClientHandlerExtension) connection).getNetworkManager());
+                SocketAddress socketAddress = ClientCompatibilityManager.INSTANCE.getSocketAddress(((ClientNetworkHandlerExtension) connection).getNetworkManager());
                 if (socketAddress instanceof InetSocketAddress) {
                     InetSocketAddress address = (InetSocketAddress) socketAddress;
                     client.connect(new InitializationData(address.getHostString(), secretPacket));
@@ -89,7 +89,7 @@ public class ClientManager {
     }
 
     public static void sendPlayerError(String translationKey, @Nullable Exception e) {
-        MinecraftAccessor.getMinecraft().ingameGUI.addChatMessage(StringTranslate.getInstance().translateKeyFormat(translationKey, e.getMessage()));
+        MinecraftAccessor.getMinecraft().inGameHud.addChatMessage(TranslationStorage.getInstance().get(translationKey, e.getMessage()));
     }
 
     private void onDisconnect() {
@@ -120,7 +120,7 @@ public class ClientManager {
         } catch (Exception e) {
             Voicechat.LOGGER.error("Failed to change voice chat port: {}", e.getMessage());
         }
-        MinecraftAccessor.getMinecraft().ingameGUI.addChatMessage(String.format(StringTranslate.getInstance().translateKey("message.voicechat.server_port"), server.getPort()));
+        MinecraftAccessor.getMinecraft().inGameHud.addChatMessage(String.format(TranslationStorage.getInstance().get("message.voicechat.server_port"), server.getPort()));
     }
 
     @Nullable

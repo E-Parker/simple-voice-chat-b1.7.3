@@ -5,7 +5,7 @@ import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.common.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class VoiceActivationSlider extends DebouncedSlider implements MicTestButton.MicListener {
 
     private static final String SLIDER = TextureHelper.format(Voicechat.MODID, "textures/gui/voice_activation_slider.png");
-    private static final String NO_ACTIVATION = "§c" + StringTranslate.getInstance().translateKey("message.voicechat.voice_activation.disabled");
+    private static final String NO_ACTIVATION = "§c" + TranslationStorage.getInstance().get("message.voicechat.voice_activation.disabled");
 
     private double micValue;
 
@@ -23,24 +23,24 @@ public class VoiceActivationSlider extends DebouncedSlider implements MicTestBut
     }
 
     @Override
-    public void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-        super.mouseDragged(mc, mouseX, mouseY);
+    public void renderBackground(Minecraft mc, int mouseX, int mouseY) {
+        super.renderBackground(mc, mouseX, mouseY);
         TextureHelper.bindTexture(SLIDER);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         int width = (int) (226D * micValue);
-        drawTexturedModalRect(xPosition + 1, yPosition + 1, 0, 0, width, 18);
+        drawTexture(x + 1, y + 1, 0, 0, width, 18);
     }
 
     @Override
     protected void updateMessage() {
         long db = Math.round(Utils.percToDb(value));
-        String component = String.format(StringTranslate.getInstance().translateKey("message.voicechat.voice_activation"), db);
+        String component = String.format(TranslationStorage.getInstance().get("message.voicechat.voice_activation"), db);
 
         if (db >= -10L) {
             component = "§c" + component;
         }
 
-        displayString = component;
+        text = component;
     }
 
     @Nullable

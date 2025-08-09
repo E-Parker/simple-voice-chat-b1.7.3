@@ -3,7 +3,7 @@ package de.maxhenkel.voicechat.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.maxhenkel.voicechat.Voicechat;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class KeyBindingHelper {
             JsonObject obj = JsonParser.parseString(data).getAsJsonObject();
 
             for (KeyBinding keyBinding : keyBindings) {
-                keyBinding.keyCode = obj.get(keyBinding.keyDescription).getAsInt();
+                keyBinding.code = obj.get(keyBinding.translationKey).getAsInt();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,7 +50,7 @@ public class KeyBindingHelper {
             JsonObject obj = new JsonObject();
 
             for (KeyBinding keyBinding : keyBindings) {
-                obj.addProperty(keyBinding.keyDescription, keyBinding.keyCode);
+                obj.addProperty(keyBinding.translationKey, keyBinding.code);
             }
 
             FileUtils.write(SETTINGS_FILE, obj.toString(), Charset.defaultCharset());

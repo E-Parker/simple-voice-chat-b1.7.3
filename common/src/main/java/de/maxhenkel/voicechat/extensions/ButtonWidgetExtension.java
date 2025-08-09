@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.extensions;
 
-public interface GuiButtonExtension {
+public interface ButtonWidgetExtension {
     void setWidth(int width);
     void setHeight(int height);
 

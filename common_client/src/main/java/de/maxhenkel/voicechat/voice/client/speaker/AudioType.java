@@ -1,10 +1,10 @@
 package de.maxhenkel.voicechat.voice.client.speaker;
 
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public enum AudioType {
 
-    NORMAL(StringTranslate.getInstance().translateKey("message.voicechat.audio_type.normal")), REDUCED(StringTranslate.getInstance().translateKey("message.voicechat.audio_type.reduced")), OFF(StringTranslate.getInstance().translateKey("message.voicechat.audio_type.off"));
+    NORMAL(TranslationStorage.getInstance().get("message.voicechat.audio_type.normal")), REDUCED(TranslationStorage.getInstance().get("message.voicechat.audio_type.reduced")), OFF(TranslationStorage.getInstance().get("message.voicechat.audio_type.off"));
 
     private final String component;
 

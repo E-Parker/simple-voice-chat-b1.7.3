@@ -67,16 +67,16 @@ public class GameProfileUtils {
         int skinTextureId;
 
         if (!usernameToIdMap.containsKey(username)) {
-            skinTextureId = mc.renderEngine.getTextureForDownloadableImage(getSkinUrl(username), null);
+            skinTextureId = mc.textureManager.downloadTexture(getSkinUrl(username), null);
             usernameToIdMap.put(username, skinTextureId);
         } else {
             skinTextureId = usernameToIdMap.get(username);
         }
 
         if (skinTextureId >= 0) {
-            mc.renderEngine.bindTexture(skinTextureId);
+            mc.textureManager.bindTexture(skinTextureId);
         } else {
-            mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/mob/char.png"));
+            mc.textureManager.bindTexture(mc.textureManager.getTextureId("/mob/char.png"));
         }
     }
 

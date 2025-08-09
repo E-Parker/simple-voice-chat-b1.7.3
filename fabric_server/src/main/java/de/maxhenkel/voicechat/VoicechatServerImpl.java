@@ -1,10 +1,10 @@
 package de.maxhenkel.voicechat;
 
-import de.maxhenkel.voicechat.extensions.EntityPlayerExtension;
-import de.maxhenkel.voicechat.mixin.NetworkListenThreadAccessor;
+import de.maxhenkel.voicechat.extensions.PlayerEntityExtension;
+import de.maxhenkel.voicechat.mixin.ConnectionListenerAccessor;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Packet;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,23 +26,23 @@ public class VoicechatServerImpl implements VoicechatServer {
     }
 
     @Override
-    public void sendToPlayer(EntityPlayer player, Packet packet) {
-        server.configManager.sendPacketToPlayer(player.username, packet);
+    public void sendToPlayer(PlayerEntity player, Packet packet) {
+        server.playerManager.sendPacket(player.name, packet);
     }
 
     @Override
-    public EntityPlayer getPlayerByName(String name) {
-        return server.configManager.getPlayerEntity(name);
+    public PlayerEntity getPlayerByName(String name) {
+        return server.playerManager.getPlayer(name);
     }
 
     @Override
-    public EntityPlayer getPlayerByUuid(UUID uuid) {
+    public PlayerEntity getPlayerByUuid(UUID uuid) {
         if (uuidToUsernameMap.containsKey(uuid))
             return getPlayerByName(uuidToUsernameMap.get(uuid));
 
-        EntityPlayer player = null;
-        for (EntityPlayer playerEntity : (List<EntityPlayer>) server.configManager.playerEntities) {
-            if (((EntityPlayerExtension) playerEntity).getUniqueID().equals(uuid)) {
+        PlayerEntity player = null;
+        for (PlayerEntity playerEntity : (List<PlayerEntity>) server.playerManager.players) {
+            if (((PlayerEntityExtension) playerEntity).getUniqueID().equals(uuid)) {
                 player = playerEntity;
                 break;
             }
@@ -51,17 +51,17 @@ public class VoicechatServerImpl implements VoicechatServer {
         if (player == null)
             return null;
 
-        uuidToUsernameMap.put(uuid, player.username);
+        uuidToUsernameMap.put(uuid, player.name);
         return player;
     }
 
     @Override
-    public List<EntityPlayer> getPlayerList() {
-        return server.configManager.playerEntities;
+    public List<PlayerEntity> getPlayerList() {
+        return server.playerManager.players;
     }
 
     @Override
     public String getServerIp() {
-        return ((NetworkListenThreadAccessor) server.field_6036_c).getServerSocket().getInetAddress().getHostAddress();
+        return ((ConnectionListenerAccessor) server.connections).getSocket().getInetAddress().getHostAddress();
     }
 }

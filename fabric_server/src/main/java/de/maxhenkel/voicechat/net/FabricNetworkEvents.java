@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.net;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,7 +12,7 @@ public class FabricNetworkEvents {
         serverPackets.put(channel, event);
     }
 
-    public static boolean onCustomPayloadServer(Packet135ClientCustomPayload packet, EntityPlayer player) {
+    public static boolean onCustomPayloadServer(Packet135ClientCustomPayload packet, PlayerEntity player) {
         ServerCustomPayloadEvent event = serverPackets.get(packet.getChannel());
         if (event != null) {
             event.onCustomPayload(packet, player);
@@ -22,6 +22,6 @@ public class FabricNetworkEvents {
     }
 
     public interface ServerCustomPayloadEvent {
-        void onCustomPayload(Packet135ClientCustomPayload packet, EntityPlayer player);
+        void onCustomPayload(Packet135ClientCustomPayload packet, PlayerEntity player);
     }
 }

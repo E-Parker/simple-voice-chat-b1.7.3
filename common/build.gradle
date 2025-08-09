@@ -1,9 +1,15 @@
+/*
 plugins {
     id 'java'
     id("maven-publish")
     id("fabric-loom") version "1.9.2"
     id("babric-loom-extension") version "1.9.3"
 }
+*/
+
+apply plugin: "maven-publish"
+apply plugin: "fabric-loom"
+apply plugin: "babric-loom-extension"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 sourceCompatibility = JavaLanguageVersion.of(java_version as int)
@@ -23,14 +29,14 @@ repositories {
 /*
 task prepareWorkspace {
 
-}
+}*/
 
 loom {
     //customManifest.set(custom_manifest_url)
 
     //intermediaryUrl = "https://github.com/BluSpring/maven-repo/raw/main/xyz/bluspring/intermediary/empty/intermediary-empty.jar"
     //serverOnlyMinecraftJar()
-}*/
+}
 
 sourceSets {
     template {

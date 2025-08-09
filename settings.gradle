@@ -1,14 +1,15 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         maven { url = "https://maven.fabricmc.net/" }
         maven { url = "https://maven.glass-launcher.net/babric/" }
-        maven { url = 'https://maven.minecraftforge.net/' }
-        maven { url = 'https://maven.maxhenkel.de/repository/public' }
         maven { url = "https://maven.glass-launcher.net/releases/" }
+        /*maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://maven.maxhenkel.de/repository/public' }
+        maven { url = "https://maven.glass-launcher.net/releases/" }*/
         mavenCentral()
-        gradlePluginPortal()
     }
 }
 
 rootProject.name = 'voicechat'
-include('api', 'common_client', 'common', 'fabric_client', 'fabric_server')
+include('api', 'common', 'common_client', 'fabric_client', 'fabric_server')

@@ -15,11 +15,9 @@ import de.maxhenkel.voicechat.gui.widgets.ToggleImageButton;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.client.*;
 import de.maxhenkel.voicechat.voice.common.ClientGroup;
-import net.minecraft.src.StringTranslate;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 
 public class VoiceChatScreen extends VoiceChatScreenBase {
 
@@ -29,10 +27,10 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
     private static final String VOLUMES = TextureHelper.format(Voicechat.MODID, "textures/icons/adjust_volumes.png");
     private static final String SPEAKER = TextureHelper.format(Voicechat.MODID, "textures/icons/speaker_button.png");
     private static final String RECORD = TextureHelper.format(Voicechat.MODID, "textures/icons/record_button.png");
-    private static final String TITLE = StringTranslate.getInstance().translateKey("gui.voicechat.voice_chat.title");
-    private static final String SETTINGS = StringTranslate.getInstance().translateKey("message.voicechat.settings");
-    private static final String GROUP = StringTranslate.getInstance().translateKey("message.voicechat.group");
-    private static final String ADJUST_PLAYER_VOLUMES = StringTranslate.getInstance().translateKey("message.voicechat.adjust_volumes");
+    private static final String TITLE = TranslationStorage.getInstance().get("gui.voicechat.voice_chat.title");
+    private static final String SETTINGS = TranslationStorage.getInstance().get("message.voicechat.settings");
+    private static final String GROUP = TranslationStorage.getInstance().get("message.voicechat.group");
+    private static final String ADJUST_PLAYER_VOLUMES = TranslationStorage.getInstance().get("message.voicechat.adjust_volumes");
 
     private ToggleImageButton mute;
     private ToggleImageButton disable;
@@ -46,77 +44,77 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         @Nullable ClientVoicechat client = ClientManager.getClient();
 
         mute = new ToggleImageButton(0, guiLeft + 6, guiTop + ySize - 6 - 20, MICROPHONE, stateManager::isMuted, button -> {
             stateManager.setMuted(!stateManager.isMuted());
         }, new MuteTooltipSupplier(this, stateManager));
-        controlList.add(mute);
+        buttons.add(mute);
 
         disable = new ToggleImageButton(1, guiLeft + 6 + 20 + 2, guiTop + ySize - 6 - 20, SPEAKER, stateManager::isDisabled, button -> {
             stateManager.setDisabled(!stateManager.isDisabled());
         }, new DisableTooltipSupplier(this, stateManager));
-        controlList.add(disable);
+        buttons.add(disable);
 
         ImageButton volumes = new ImageButton(2, guiLeft + 6 + 20 + 2 + 20 + 2, guiTop + ySize - 6 - 20, VOLUMES, button -> {
-            mc.displayGuiScreen(new AdjustVolumesScreen());
+            minecraft.setScreen(new AdjustVolumesScreen());
         }, (button, mouseX, mouseY) -> {
             drawHoveringText(ADJUST_PLAYER_VOLUMES, mouseX, mouseY);
         });
-        controlList.add(volumes);
+        buttons.add(volumes);
 
         if (client != null && VoicechatClient.CLIENT_CONFIG.useNatives.get()) {
             if (client.getRecorder() != null || (client.getConnection() != null && client.getConnection().getData().allowRecording())) {
                 ToggleImageButton record = new ToggleImageButton(3, guiLeft + xSize - 6 - 20 - 2 - 20, guiTop + ySize - 6 - 20, RECORD, () -> ClientManager.getClient() != null && ClientManager.getClient().getRecorder() != null, button -> toggleRecording(), new RecordingTooltipSupplier(this));
-                controlList.add(record);
+                buttons.add(record);
             }
         }
 
         ToggleImageButton hide = new ToggleImageButton(4, guiLeft + xSize - 6 - 20, guiTop + ySize - 6 - 20, HIDE, VoicechatClient.CLIENT_CONFIG.hideIcons::get, button -> {
             VoicechatClient.CLIENT_CONFIG.hideIcons.set(!VoicechatClient.CLIENT_CONFIG.hideIcons.get()).save();
         }, new HideTooltipSupplier(this));
-        controlList.add(hide);
+        buttons.add(hide);
 
         ButtonBase settings = new ButtonBase(5, guiLeft + 6, guiTop + 6 + 15, 75, 20, SETTINGS) {
             @Override
             public void onPress() {
-                mc.displayGuiScreen(new VoiceChatSettingsScreen());
+                minecraft.setScreen(new VoiceChatSettingsScreen());
             }
         };
-        controlList.add(settings);
+        buttons.add(settings);
 
         ButtonBase group = new ButtonBase(6, guiLeft + xSize - 6 - 75 + 1, guiTop + 6 + 15, 75, 20, GROUP) {
             @Override
             public void onPress() {
                 ClientGroup g = stateManager.getGroup();
                 if (g != null) {
-                    mc.displayGuiScreen(new GroupScreen(g));
+                    minecraft.setScreen(new GroupScreen(g));
                 } else {
-                    mc.displayGuiScreen(new JoinGroupScreen());
+                    minecraft.setScreen(new JoinGroupScreen());
                 }
             }
         };
-        controlList.add(group);
-        group.enabled = client != null && client.getConnection() != null && client.getConnection().getData().groupsEnabled();
+        buttons.add(group);
+        group.active = client != null && client.getConnection() != null && client.getConnection().getData().groupsEnabled();
         recordingHoverArea = new HoverArea(6 + 20 + 2 + 20 + 2 + 20 + 2, ySize - 6 - 20, xSize - ((6 + 20 + 2 + 20 + 2) * 2 + 20 + 2), 20);
 
         checkButtons();
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
         checkButtons();
     }
 
     private void checkButtons() {
         if (mute != null) {
-            mute.enabled = MuteTooltipSupplier.canMuteMic();
+            mute.active = MuteTooltipSupplier.canMuteMic();
         }
         if (disable != null) {
-            disable.enabled = stateManager.canEnable();
+            disable.active = stateManager.canEnable();
         }
     }
 
@@ -129,33 +127,33 @@ public class VoiceChatScreen extends VoiceChatScreenBase {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == KeyEvents.KEY_VOICE_CHAT.keyCode) {
-            mc.displayGuiScreen(null);
+    public void keyPressed(char typedChar, int keyCode) {
+        if (keyCode == KeyEvents.KEY_VOICE_CHAT.code) {
+            minecraft.setScreen(null);
             return;
         }
-        super.keyTyped(typedChar, keyCode);
+        super.keyPressed(typedChar, keyCode);
     }
 
     @Override
     public void renderBackground(int mouseX, int mouseY, float delta) {
         TextureHelper.bindTexture(TEXTURE);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        drawTexture(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        int titleWidth = fontRenderer.getStringWidth(TITLE);
-        fontRenderer.drawString(TITLE, guiLeft + (xSize - titleWidth) / 2, guiTop + 7, FONT_COLOR);
+        int titleWidth = textRenderer.getWidth(TITLE);
+        textRenderer.draw(TITLE, guiLeft + (xSize - titleWidth) / 2, guiTop + 7, FONT_COLOR);
 
         ClientVoicechat client = ClientManager.getClient();
         if (client != null && client.getRecorder() != null) {
             AudioRecorder recorder = client.getRecorder();
             String time = recorder.getDuration();
-            fontRenderer.drawString("§4" + time, guiLeft + recordingHoverArea.getPosX() + recordingHoverArea.getWidth() / 2 - fontRenderer.getStringWidth(time) / 2, guiTop + recordingHoverArea.getPosY() + recordingHoverArea.getHeight() / 2 - (int)TextureHelper.FONT_HEIGHT / 2, 0);
+            textRenderer.draw("§4" + time, guiLeft + recordingHoverArea.getPosX() + recordingHoverArea.getWidth() / 2 - textRenderer.getWidth(time) / 2, guiTop + recordingHoverArea.getPosY() + recordingHoverArea.getHeight() / 2 - (int)TextureHelper.FONT_HEIGHT / 2, 0);
 
             if (recordingHoverArea.isHovered(guiLeft, guiTop, mouseX, mouseY)) {
-                drawHoveringText(String.format(StringTranslate.getInstance().translateKey("message.voicechat.storage_size"), recorder.getStorage()), mouseX, mouseY);
+                drawHoveringText(String.format(TranslationStorage.getInstance().get("message.voicechat.storage_size"), recorder.getStorage()), mouseX, mouseY);
             }
         }
     }

@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.gui.widgets;
 
 import de.maxhenkel.voicechat.VoicechatClient;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public class VoiceSoundSlider extends DebouncedSlider {
 
@@ -12,11 +12,11 @@ public class VoiceSoundSlider extends DebouncedSlider {
 
     @Override
     protected void updateMessage() {
-        displayString = getMsg();
+        text = getMsg();
     }
 
     public String getMsg() {
-        return String.format(StringTranslate.getInstance().translateKey("message.voicechat.voice_chat_volume"), Math.round(value * 200F) + "%");
+        return String.format(TranslationStorage.getInstance().get("message.voicechat.voice_chat_volume"), Math.round(value * 200F) + "%");
     }
 
     @Override

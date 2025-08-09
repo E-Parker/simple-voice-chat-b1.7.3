@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.net;
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.NetHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.NetworkHandler;
 
 import javax.annotation.Nullable;
 
@@ -17,7 +17,7 @@ public class Channel<T extends Packet<T>> {
         serverListener = packetReceiver;
     }
 
-    public void onServerPacket(EntityPlayer player, NetHandler handler, T packet) {
+    public void onServerPacket(PlayerEntity player, NetworkHandler handler, T packet) {
         if (serverListener != null) {
             serverListener.onPacket(player, handler, packet);
         }

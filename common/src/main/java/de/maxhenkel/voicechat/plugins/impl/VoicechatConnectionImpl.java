@@ -4,23 +4,23 @@ import de.maxhenkel.voicechat.Voicechat;
 import de.maxhenkel.voicechat.api.Group;
 import de.maxhenkel.voicechat.api.ServerPlayer;
 import de.maxhenkel.voicechat.api.VoicechatConnection;
-import de.maxhenkel.voicechat.extensions.EntityPlayerExtension;
+import de.maxhenkel.voicechat.extensions.PlayerEntityExtension;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
 import de.maxhenkel.voicechat.voice.server.PlayerStateManager;
 import de.maxhenkel.voicechat.voice.server.Server;
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 
 public class VoicechatConnectionImpl implements VoicechatConnection {
 
     private final ServerPlayer player;
-    private final EntityPlayer serverPlayer;
+    private final PlayerEntity serverPlayer;
     private final PlayerState state;
     @Nullable
     private final Group group;
 
-    public VoicechatConnectionImpl(EntityPlayer player, PlayerState state) {
+    public VoicechatConnectionImpl(PlayerEntity player, PlayerState state) {
         this.serverPlayer = player;
         this.player = new ServerPlayerImpl(player);
         this.state = state;
@@ -28,7 +28,7 @@ public class VoicechatConnectionImpl implements VoicechatConnection {
     }
 
     @Nullable
-    public static VoicechatConnectionImpl fromPlayer(@Nullable EntityPlayer player) {
+    public static VoicechatConnectionImpl fromPlayer(@Nullable PlayerEntity player) {
         if (player == null) {
             return null;
         }
@@ -36,7 +36,7 @@ public class VoicechatConnectionImpl implements VoicechatConnection {
         if (server == null) {
             return null;
         }
-        PlayerState state = server.getPlayerStateManager().getState(((EntityPlayerExtension) player).getUniqueID());
+        PlayerState state = server.getPlayerStateManager().getState(((PlayerEntityExtension) player).getUniqueID());
         if (state == null) {
             return null;
         }

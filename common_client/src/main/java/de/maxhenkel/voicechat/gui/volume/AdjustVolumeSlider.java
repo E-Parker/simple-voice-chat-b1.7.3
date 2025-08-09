@@ -1,11 +1,11 @@
 package de.maxhenkel.voicechat.gui.volume;
 
 import de.maxhenkel.voicechat.gui.widgets.DebouncedSlider;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public class AdjustVolumeSlider extends DebouncedSlider {
 
-    protected static final String MUTED = StringTranslate.getInstance().translateKey("message.voicechat.muted");
+    protected static final String MUTED = TranslationStorage.getInstance().get("message.voicechat.muted");
 
     protected static final float MAXIMUM = 4F;
 
@@ -20,11 +20,11 @@ public class AdjustVolumeSlider extends DebouncedSlider {
     @Override
     protected void updateMessage() {
         if (value <= 0D) {
-            displayString = MUTED;
+            text = MUTED;
             return;
         }
         long amp = Math.round(value * MAXIMUM * 100F - 100F);
-        displayString = String.format(StringTranslate.getInstance().translateKey("message.voicechat.volume_amplification"), (amp > 0F ? "+" : "") + amp + "%");
+        text = String.format(TranslationStorage.getInstance().get("message.voicechat.volume_amplification"), (amp > 0F ? "+" : "") + amp + "%");
     }
 
     @Override

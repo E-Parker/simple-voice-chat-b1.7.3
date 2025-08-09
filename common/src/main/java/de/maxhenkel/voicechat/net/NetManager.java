@@ -1,9 +1,8 @@
 package de.maxhenkel.voicechat.net;
 
 import de.maxhenkel.voicechat.Voicechat;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.NetHandler;
-
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.NetworkHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
@@ -43,7 +42,7 @@ public abstract class NetManager {
 
     public abstract <T extends Packet<T>> Channel<T> registerReceiver(Class<T> packetType, boolean toClient, boolean toServer);
 
-    public static void sendToClient(EntityPlayer player, Packet<?> packet) {
+    public static void sendToClient(PlayerEntity player, Packet<?> packet) {
         if (!Voicechat.SERVER.isCompatible(player)) {
             return;
         }
@@ -58,6 +57,6 @@ public abstract class NetManager {
     }
 
     public interface ServerReceiver<T extends Packet<T>> {
-        void onPacket(EntityPlayer player, NetHandler handler, T packet);
+        void onPacket(PlayerEntity player, NetworkHandler handler, T packet);
     }
 }

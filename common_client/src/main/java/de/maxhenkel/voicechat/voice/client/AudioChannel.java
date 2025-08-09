@@ -4,7 +4,7 @@ import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
 import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.api.opus.OpusDecoder;
-import de.maxhenkel.voicechat.extensions.EntityPlayerExtension;
+import de.maxhenkel.voicechat.extensions.PlayerEntityExtension;
 import de.maxhenkel.voicechat.integration.freecam.FreecamUtil;
 import de.maxhenkel.voicechat.plugins.PluginManager;
 import de.maxhenkel.voicechat.plugins.impl.opus.OpusManager;
@@ -12,8 +12,8 @@ import de.maxhenkel.voicechat.voice.client.speaker.Speaker;
 import de.maxhenkel.voicechat.voice.client.speaker.SpeakerManager;
 import de.maxhenkel.voicechat.voice.common.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Vec3D;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class AudioChannel extends Thread {
                     continue;
                 }
 
-                if (minecraft.thePlayer == null || minecraft.theWorld == null) {
+                if (minecraft.player == null || minecraft.world == null) {
                     continue;
                 }
 
@@ -175,7 +175,7 @@ public class AudioChannel extends Thread {
     }
 
     private void writeToSpeaker(SoundPacket<?> packet, short[] monoData) {
-        @Nullable EntityPlayer player = ((List<EntityPlayer>) minecraft.theWorld.playerEntities).stream().filter(a -> ((EntityPlayerExtension) a).getUniqueID().equals(uuid)).collect(Collectors.toList()).get(0);
+        @Nullable PlayerEntity player = ((List<PlayerEntity>) minecraft.world.players).stream().filter(a -> ((PlayerEntityExtension) a).getUniqueID().equals(uuid)).collect(Collectors.toList()).get(0);
 
         float channelVolume;
 
@@ -199,7 +199,7 @@ public class AudioChannel extends Thread {
             if (player == null) {
                 return;
             }
-            if (player == minecraft.thePlayer) {
+            if (player == minecraft.player) {
                 short[] processedMonoData = PluginManager.instance().onReceiveStaticClientSound(uuid, monoData);
                 speaker.play(processedMonoData, volume, soundPacket.getCategory());
                 client.getTalkCache().updateTalking(uuid, soundPacket.isWhispering());
@@ -209,7 +209,7 @@ public class AudioChannel extends Thread {
 
             float deathVolume = Math.min(Math.max((20F - (float) player.deathTime) / 20F, 0F), 1F);
             volume *= deathVolume;
-            Vec3D pos = player.getPosition(1F);
+            Vec3d pos = player.getPosition(1F);
 
             short[] processedMonoData = PluginManager.instance().onReceiveEntityClientSound(uuid, monoData, soundPacket.isWhispering(), soundPacket.getDistance());
 

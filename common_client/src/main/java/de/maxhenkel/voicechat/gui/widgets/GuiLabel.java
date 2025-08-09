@@ -2,15 +2,15 @@ package de.maxhenkel.voicechat.gui.widgets;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.resource.language.TranslationStorage;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
 import java.util.List;
 
-public class GuiLabel extends Gui {
+public class GuiLabel extends DrawContext {
     protected int width = 200;
     protected int height = 20;
     public int x;
@@ -24,10 +24,10 @@ public class GuiLabel extends Gui {
     private int backColor;
     private int ulColor;
     private int brColor;
-    private final FontRenderer fontRenderer;
+    private final TextRenderer fontRenderer;
     private int border;
 
-    public GuiLabel(FontRenderer fontRendererObj, int p_i45540_2_, int p_i45540_3_, int p_i45540_4_, int p_i45540_5_, int p_i45540_6_, int p_i45540_7_)
+    public GuiLabel(TextRenderer fontRendererObj, int p_i45540_2_, int p_i45540_3_, int p_i45540_4_, int p_i45540_5_, int p_i45540_6_, int p_i45540_7_)
     {
         this.fontRenderer = fontRendererObj;
         this.id = p_i45540_2_;
@@ -47,7 +47,7 @@ public class GuiLabel extends Gui {
 
     public void addLine(String p_175202_1_)
     {
-        this.labels.add(StringTranslate.getInstance().translateKey(p_175202_1_));
+        this.labels.add(TranslationStorage.getInstance().get(p_175202_1_));
     }
 
     public GuiLabel setCentered()
@@ -70,11 +70,11 @@ public class GuiLabel extends Gui {
             {
                 if (this.centered)
                 {
-                    this.drawCenteredString(this.fontRenderer, this.labels.get(k), this.x + this.width / 2, j + k * 10, this.textColor);
+                    this.drawCenteredTextWithShadow(this.fontRenderer, this.labels.get(k), this.x + this.width / 2, j + k * 10, this.textColor);
                 }
                 else
                 {
-                    this.drawString(this.fontRenderer, this.labels.get(k), this.x, j + k * 10, this.textColor);
+                    this.drawTextWithShadow(this.fontRenderer, this.labels.get(k), this.x, j + k * 10, this.textColor);
                 }
             }
         }
@@ -88,7 +88,7 @@ public class GuiLabel extends Gui {
             int j = this.height + this.border * 2;
             int k = this.x - this.border;
             int l = this.y - this.border;
-            drawRect(k, l, k + i, l + j, this.backColor);
+            fill(k, l, k + i, l + j, this.backColor);
             this.drawHorizontalLine(k, k + i, l, this.ulColor);
             this.drawHorizontalLine(k, k + i, l + j, this.brColor);
             this.drawVerticalLine(k, l, l + j, this.ulColor);
@@ -105,7 +105,7 @@ public class GuiLabel extends Gui {
             endX = i;
         }
 
-        drawRect(startX, y, endX + 1, y + 1, color);
+        fill(startX, y, endX + 1, y + 1, color);
     }
 
     protected void drawVerticalLine(int x, int startY, int endY, int color)
@@ -117,6 +117,6 @@ public class GuiLabel extends Gui {
             endY = i;
         }
 
-        drawRect(x, startY + 1, x + 1, endY, color);
+        fill(x, startY + 1, x + 1, endY, color);
     }
 }

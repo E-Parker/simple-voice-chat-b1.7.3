@@ -7,8 +7,8 @@ import de.maxhenkel.voicechat.voice.client.AudioChannelConfig;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import de.maxhenkel.voicechat.voice.client.ClientVoicechat;
 import de.maxhenkel.voicechat.voice.client.DataLines;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.List;
 public class SelectSpeakerScreen extends SelectDeviceScreen {
 
     protected static final String SPEAKER_ICON = TextureHelper.format(Voicechat.MODID, "textures/icons/speaker.png");
-    protected static final String TITLE = StringTranslate.getInstance().translateKey("gui.voicechat.select_speaker.title");
-    protected static final String NO_SPEAKER = StringTranslate.getInstance().translateKey("message.voicechat.no_speaker");
+    protected static final String TITLE = TranslationStorage.getInstance().get("gui.voicechat.select_speaker.title");
+    protected static final String NO_SPEAKER = TranslationStorage.getInstance().get("message.voicechat.no_speaker");
 
-    public SelectSpeakerScreen(@Nullable GuiScreen parent) {
+    public SelectSpeakerScreen(@Nullable Screen parent) {
         super(TITLE, parent);
     }
 

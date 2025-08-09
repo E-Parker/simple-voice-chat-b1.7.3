@@ -2,9 +2,7 @@ package de.maxhenkel.voicechat.gui.widgets;
 
 import de.maxhenkel.voicechat.gui.VoiceChatScreenBase;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiButton;
-
-import java.io.IOException;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 public abstract class ListScreenBase extends VoiceChatScreenBase {
 
@@ -16,24 +14,23 @@ public abstract class ListScreenBase extends VoiceChatScreenBase {
     }
 
     @Override
-    public void handleMouseInput() {
-        super.handleMouseInput();
+    public void onMouseEvent() {
+        super.onMouseEvent();
         if (list != null) {
             list.handleMouseInput();
         }
     }
 
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        super.actionPerformed(button);
+    protected void buttonClicked(ButtonWidget button) {
+        super.buttonClicked(button);
         if (list != null) {
-            list.actionPerformed(button);
+            list.buttonClicked(button);
         }
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float delta) {
-        super.drawScreen(mouseX, mouseY, delta);
+    public void render(int mouseX, int mouseY, float delta) {
+        super.render(mouseX, mouseY, delta);
         if (list != null) {
             list.drawScreen(mouseX, mouseY, delta);
         }
@@ -52,16 +49,16 @@ public abstract class ListScreenBase extends VoiceChatScreenBase {
     }
 
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) {
-        super.mouseMovedOrUp(mouseX, mouseY, mouseButton);
+    protected void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+        super.mouseReleased(mouseX, mouseY, mouseButton);
         if (list != null) {
             list.mouseReleased(mouseX, mouseY, mouseButton);
         }
     }
 
     @Override
-    public void setWorldAndResolution(Minecraft mcIn, int w, int h) {
-        super.setWorldAndResolution(mcIn, w, h);
+    public void init(Minecraft mcIn, int w, int h) {
+        super.init(mcIn, w, h);
     }
 
     public void setList(ListScreenListBase<?> list) {

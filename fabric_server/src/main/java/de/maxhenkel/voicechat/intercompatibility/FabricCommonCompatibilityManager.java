@@ -7,7 +7,7 @@ import de.maxhenkel.voicechat.net.NetManager;
 import de.maxhenkel.voicechat.permission.NoOpPermissionManager;
 import de.maxhenkel.voicechat.permission.PermissionManager;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ public class FabricCommonCompatibilityManager extends CommonCompatibilityManager
 
     private final List<Consumer<Object>> serverStartingEvents;
     private final List<Consumer<Object>> serverStoppingEvents;
-    private final List<Consumer<EntityPlayer>> playerLoggedInEvents;
-    private final List<Consumer<EntityPlayer>> playerLoggedOutEvents;
-    private final List<Consumer<EntityPlayer>> voicechatConnectEvents;
-    private final List<Consumer<EntityPlayer>> voicechatCompatibilityCheckSucceededEvents;
+    private final List<Consumer<PlayerEntity>> playerLoggedInEvents;
+    private final List<Consumer<PlayerEntity>> playerLoggedOutEvents;
+    private final List<Consumer<PlayerEntity>> voicechatConnectEvents;
+    private final List<Consumer<PlayerEntity>> voicechatCompatibilityCheckSucceededEvents;
     private final List<Consumer<UUID>> voicechatDisconnectEvents;
 
     public FabricCommonCompatibilityManager() {
@@ -47,11 +47,11 @@ public class FabricCommonCompatibilityManager extends CommonCompatibilityManager
         this.serverStoppingEvents.forEach(a -> a.accept(VoicechatServerImpl.instance.getServer()));
     }
 
-    public void onPlayerLogIn(EntityPlayer player) {
+    public void onPlayerLogIn(PlayerEntity player) {
         this.playerLoggedInEvents.forEach(a -> a.accept(player));
     }
 
-    public void onPlayerLogOut(EntityPlayer player) {
+    public void onPlayerLogOut(PlayerEntity player) {
         this.playerLoggedOutEvents.forEach(a -> a.accept(player));
     }
 
@@ -71,7 +71,7 @@ public class FabricCommonCompatibilityManager extends CommonCompatibilityManager
     }
 
     @Override
-    public void emitServerVoiceChatConnectedEvent(EntityPlayer player) {
+    public void emitServerVoiceChatConnectedEvent(PlayerEntity player) {
         voicechatConnectEvents.forEach(consumer -> consumer.accept(player));
     }
 
@@ -81,12 +81,12 @@ public class FabricCommonCompatibilityManager extends CommonCompatibilityManager
     }
 
     @Override
-    public void emitPlayerCompatibilityCheckSucceeded(EntityPlayer player) {
+    public void emitPlayerCompatibilityCheckSucceeded(PlayerEntity player) {
         voicechatCompatibilityCheckSucceededEvents.forEach(consumer -> consumer.accept(player));
     }
 
     @Override
-    public void onServerVoiceChatConnected(Consumer<EntityPlayer> onVoiceChatConnected) {
+    public void onServerVoiceChatConnected(Consumer<PlayerEntity> onVoiceChatConnected) {
         voicechatConnectEvents.add(onVoiceChatConnected);
     }
 
@@ -106,17 +106,17 @@ public class FabricCommonCompatibilityManager extends CommonCompatibilityManager
     }
 
     @Override
-    public void onPlayerLoggedIn(Consumer<EntityPlayer> onPlayerLoggedIn) {
+    public void onPlayerLoggedIn(Consumer<PlayerEntity> onPlayerLoggedIn) {
         playerLoggedInEvents.add(onPlayerLoggedIn);
     }
 
     @Override
-    public void onPlayerLoggedOut(Consumer<EntityPlayer> onPlayerLoggedOut) {
+    public void onPlayerLoggedOut(Consumer<PlayerEntity> onPlayerLoggedOut) {
         playerLoggedOutEvents.add(onPlayerLoggedOut);
     }
 
     @Override
-    public void onPlayerCompatibilityCheckSucceeded(Consumer<EntityPlayer> onPlayerCompatibilityCheckSucceeded) {
+    public void onPlayerCompatibilityCheckSucceeded(Consumer<PlayerEntity> onPlayerCompatibilityCheckSucceeded) {
         voicechatCompatibilityCheckSucceededEvents.add(onPlayerCompatibilityCheckSucceeded);
     }
 

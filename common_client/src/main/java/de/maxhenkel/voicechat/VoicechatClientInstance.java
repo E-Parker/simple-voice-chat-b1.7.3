@@ -24,7 +24,7 @@ public class VoicechatClientInstance implements VoicechatClientHelper {
 
     @Override
     public boolean isSingleplayer() {
-        return !MinecraftAccessor.getMinecraft().isMultiplayerWorld();
+        return !MinecraftAccessor.getMinecraft().isWorldRemote();
     }
 
     @Override

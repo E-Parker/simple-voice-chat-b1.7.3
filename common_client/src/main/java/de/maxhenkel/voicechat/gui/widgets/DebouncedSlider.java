@@ -13,15 +13,15 @@ public abstract class DebouncedSlider extends Slider {
     }
 
     @Override
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        boolean b = super.mousePressed(mc, mouseX, mouseY);
+    public boolean isMouseOver(Minecraft mc, int mouseX, int mouseY) {
+        boolean b = super.isMouseOver(mc, mouseX, mouseY);
         applyDebouncedInternal();
         return b;
     }
 
     @Override
-    public void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-        super.mouseDragged(mc, mouseX, mouseY);
+    public void renderBackground(Minecraft mc, int mouseX, int mouseY) {
+        super.renderBackground(mc, mouseX, mouseY);
         dragged = true;
         if (value >= 1D || value <= 0D) {
             applyDebouncedInternal();

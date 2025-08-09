@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.permission;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class NoOpPermissionManager extends PermissionManager {
     private static final Permission NO_OP = new NoOpPermission();
@@ -13,7 +13,7 @@ public class NoOpPermissionManager extends PermissionManager {
     public static class NoOpPermission implements Permission {
 
         @Override
-        public boolean hasPermission(EntityPlayer player) {
+        public boolean hasPermission(PlayerEntity player) {
             return true;
         }
 

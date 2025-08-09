@@ -6,19 +6,18 @@ import de.maxhenkel.voicechat.gui.widgets.GuiPageButtonList;
 import de.maxhenkel.voicechat.gui.widgets.GuiTextField;
 import de.maxhenkel.voicechat.gui.widgets.ListScreenBase;
 import de.maxhenkel.voicechat.util.TextureHelper;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import java.io.IOException;
 import java.util.Locale;
 
 public class AdjustVolumesScreen extends ListScreenBase {
 
     protected static final String TEXTURE = TextureHelper.format(Voicechat.MODID, "textures/gui/gui_volumes.png");
-    protected static final String TITLE = StringTranslate.getInstance().translateKey("gui.voicechat.adjust_volume.title");
-    protected static final String SEARCH_HINT = StringTranslate.getInstance().translateKey("message.voicechat.search_hint");
-    protected static final String EMPTY_SEARCH = StringTranslate.getInstance().translateKey("message.voicechat.search_empty");
+    protected static final String TITLE = TranslationStorage.getInstance().get("gui.voicechat.adjust_volume.title");
+    protected static final String SEARCH_HINT = TranslationStorage.getInstance().get("message.voicechat.search_hint");
+    protected static final String EMPTY_SEARCH = TranslationStorage.getInstance().get("message.voicechat.search_empty");
 
     protected static final int HEADER_SIZE = 16;
     protected static final int FOOTER_SIZE = 8;
@@ -37,14 +36,14 @@ public class AdjustVolumesScreen extends ListScreenBase {
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public void tick() {
+        super.tick();
         searchBox.updateCursorCounter();
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
         guiLeft = guiLeft + 2;
         guiTop = 32;
         int minUnits = (int) Math.ceil((float) (CELL_HEIGHT + SEARCH_HEIGHT + 4) / (float) UNIT_SIZE);
@@ -55,7 +54,7 @@ public class AdjustVolumesScreen extends ListScreenBase {
 
         volumeList = new AdjustVolumeList(width, height, guiTop + HEADER_SIZE + SEARCH_HEIGHT, guiTop + HEADER_SIZE + units * UNIT_SIZE, CELL_HEIGHT, this);
         String string = searchBox != null ? searchBox.getText() : "";
-        searchBox = new GuiTextField(0, fontRenderer, guiLeft + 28, guiTop + HEADER_SIZE + 6, 196, SEARCH_HEIGHT);
+        searchBox = new GuiTextField(0, textRenderer, guiLeft + 28, guiTop + HEADER_SIZE + 6, 196, SEARCH_HEIGHT);
         searchBox.setMaxStringLength(16);
         searchBox.setEnableBackgroundDrawing(false);
         searchBox.setVisible(true);
@@ -79,37 +78,36 @@ public class AdjustVolumesScreen extends ListScreenBase {
     }
 
     @Override
-    public void onGuiClosed() {
-        super.onGuiClosed();
+    public void removed() {
+        super.removed();
         Keyboard.enableRepeatEvents(false);
     }
 
     @Override
     public void renderBackground(int mouseX, int mouseY, float delta) {
         TextureHelper.bindTexture(TEXTURE);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, HEADER_SIZE);
+        drawTexture(guiLeft, guiTop, 0, 0, xSize, HEADER_SIZE);
         for (int i = 0; i < units; i++) {
-            drawTexturedModalRect(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * i, 0, HEADER_SIZE, xSize, UNIT_SIZE);
+            drawTexture(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * i, 0, HEADER_SIZE, xSize, UNIT_SIZE);
         }
-        drawTexturedModalRect(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * units, 0, HEADER_SIZE + UNIT_SIZE, xSize, FOOTER_SIZE);
-        drawTexturedModalRect(guiLeft + 10, guiTop + HEADER_SIZE + 6 - 2, xSize, 0, 12, 12);
+        drawTexture(guiLeft, guiTop + HEADER_SIZE + UNIT_SIZE * units, 0, HEADER_SIZE + UNIT_SIZE, xSize, FOOTER_SIZE);
+        drawTexture(guiLeft + 10, guiTop + HEADER_SIZE + 6 - 2, xSize, 0, 12, 12);
     }
 
     @Override
     public void renderForeground(int mouseX, int mouseY, float delta) {
-        fontRenderer.drawString(TITLE, width / 2 - fontRenderer.getStringWidth(TITLE) / 2, guiTop + 5, VoiceChatScreenBase.FONT_COLOR);
+        textRenderer.draw(TITLE, width / 2 - textRenderer.getWidth(TITLE) / 2, guiTop + 5, VoiceChatScreenBase.FONT_COLOR);
 
         if (volumeList == null) {
             return;
         }
-
         if (!volumeList.isEmpty()) {
             volumeList.drawScreen(mouseX, mouseY, delta);
         } else if (!searchBox.getText().isEmpty()) {
-            drawCenteredString(fontRenderer, EMPTY_SEARCH, width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - (int) TextureHelper.FONT_HEIGHT / 2, -1);
+            drawCenteredTextWithShadow(textRenderer, EMPTY_SEARCH, width / 2, guiTop + HEADER_SIZE + (units * UNIT_SIZE) / 2 - (int) TextureHelper.FONT_HEIGHT / 2, -1);
         }
         if (!searchBox.isFocused() && searchBox.getText().isEmpty()) {
-            drawString(fontRenderer, SEARCH_HINT, searchBox.x, searchBox.y, -1);
+            drawTextWithShadow(textRenderer, SEARCH_HINT, searchBox.x, searchBox.y, -1);
         } else {
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_BLEND);
@@ -128,8 +126,8 @@ public class AdjustVolumesScreen extends ListScreenBase {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
-        super.keyTyped(typedChar, keyCode);
+    protected void keyPressed(char typedChar, int keyCode) {
+        super.keyPressed(typedChar, keyCode);
         if (searchBox == null) {
             return;
         }

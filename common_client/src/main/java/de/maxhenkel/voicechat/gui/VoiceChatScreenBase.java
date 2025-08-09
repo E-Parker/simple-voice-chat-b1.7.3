@@ -2,17 +2,16 @@ package de.maxhenkel.voicechat.gui;
 
 import de.maxhenkel.voicechat.gui.widgets.ButtonBase;
 import de.maxhenkel.voicechat.util.TextureHelper;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class VoiceChatScreenBase extends GuiScreen {
+public abstract class VoiceChatScreenBase extends Screen {
 
     public static final int FONT_COLOR = 4210752;
 
@@ -31,22 +30,22 @@ public abstract class VoiceChatScreenBase extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
-        controlList.clear();
-        super.initGui();
+    public void init() {
+        buttons.clear();
+        super.init();
 
         this.guiLeft = (width - this.xSize) / 2;
         this.guiTop = (height - this.ySize) / 2;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float delta) {
-        drawDefaultBackground();
+    public void render(int mouseX, int mouseY, float delta) {
+        renderBackground();
         GL11.glColor4f(1F, 1F, 1F, 1F);
         renderBackground(mouseX, mouseY, delta);
-        super.drawScreen(mouseX, mouseY, delta);
+        super.render(mouseX, mouseY, delta);
         renderForeground(mouseX, mouseY, delta);
-        for (GuiButton button : (List<GuiButton>) controlList) {
+        for (ButtonWidget button : (List<ButtonWidget>) buttons) {
             if (button instanceof ButtonBase) {
                 ((ButtonBase) button).renderTooltips(mouseX, mouseY, delta);
             }
@@ -62,8 +61,8 @@ public abstract class VoiceChatScreenBase extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
-        super.actionPerformed(button);
+    protected void buttonClicked(ButtonWidget button) {
+        super.buttonClicked(button);
 
         if (!(button instanceof ButtonBase)) {
             return;
@@ -82,7 +81,7 @@ public abstract class VoiceChatScreenBase extends GuiScreen {
     }
 
     protected boolean isIngame() {
-        return mc.theWorld != null;
+        return minecraft.world != null;
     }
 
     protected int getFontColor() {
@@ -98,12 +97,12 @@ public abstract class VoiceChatScreenBase extends GuiScreen {
     }
 
     public void drawHoveringText(String tooltip, int x, int y) {
-        mc.fontRenderer.drawStringWithShadow(tooltip, x, y, 16777215);
+        minecraft.textRenderer.drawWithShadow(tooltip, x, y, 16777215);
     }
 
     public void drawHoveringText(List<String> list, int x, int y) {
         for (int i = 0; i < list.size(); i++) {
-            mc.fontRenderer.drawStringWithShadow(list.get(i), x, y + (i * (int) TextureHelper.FONT_HEIGHT), 16777215);
+            minecraft.textRenderer.drawWithShadow(list.get(i), x, y + (i * (int) TextureHelper.FONT_HEIGHT), 16777215);
         }
     }
 

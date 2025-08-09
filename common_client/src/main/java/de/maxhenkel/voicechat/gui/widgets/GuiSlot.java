@@ -1,11 +1,9 @@
 package de.maxhenkel.voicechat.gui.widgets;
 
-import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.util.MathHelper2;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.Tessellator;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.Tessellator;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -147,9 +145,9 @@ public abstract class GuiSlot {
         this.initialClickY = -2;
     }
 
-    public void actionPerformed(GuiButton button)
+    public void buttonClicked(ButtonWidget button)
     {
-        if (button.enabled)
+        if (button.active)
         {
             if (button.id == this.scrollUpButtonID)
             {
@@ -178,7 +176,7 @@ public abstract class GuiSlot {
             this.bindAmountScrolled();
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_FOG);
-            Tessellator tessellator = Tessellator.instance;
+            Tessellator tessellator = Tessellator.INSTANCE;
             // Forge: background rendering moved into separate method.
             this.drawContainerBackground(tessellator);
             int k = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
@@ -199,35 +197,35 @@ public abstract class GuiSlot {
             GL11.glShadeModel(7425);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             int i1 = 4;
-            tessellator.startDrawing(7);
+            tessellator.start(7);
 
-            tessellator.setColorRGBA(0, 0, 0, 0);
-            tessellator.addVertexWithUV((double)this.left, (double)(this.top + 4), 0.0D, 0.0D, 1.0D);
+            tessellator.color(0, 0, 0, 0);
+            tessellator.vertex((double)this.left, (double)(this.top + 4), 0.0D, 0.0D, 1.0D);
 
-            tessellator.setColorRGBA(0, 0, 0, 0);
-            tessellator.addVertexWithUV((double)this.right, (double)(this.top + 4), 0.0D, 1.0D, 1.0D);
+            tessellator.color(0, 0, 0, 0);
+            tessellator.vertex((double)this.right, (double)(this.top + 4), 0.0D, 1.0D, 1.0D);
 
-            tessellator.setColorRGBA(0, 0, 0, modifiedAlpha());
-            tessellator.addVertexWithUV((double)this.right, (double)this.top, 0.0D, 1.0D, 0.0D);
+            tessellator.color(0, 0, 0, modifiedAlpha());
+            tessellator.vertex((double)this.right, (double)this.top, 0.0D, 1.0D, 0.0D);
 
-            tessellator.setColorRGBA(0, 0, 0, modifiedAlpha());
-            tessellator.addVertexWithUV((double)this.left, (double)this.top, 0.0D, 0.0D, 0.0D);
+            tessellator.color(0, 0, 0, modifiedAlpha());
+            tessellator.vertex((double)this.left, (double)this.top, 0.0D, 0.0D, 0.0D);
 
             tessellator.draw();
 
-            tessellator.startDrawing(7);
+            tessellator.start(7);
 
-            tessellator.setColorRGBA(0, 0, 0, modifiedAlpha());
-            tessellator.addVertexWithUV((double)this.left, (double)this.bottom, 0.0D, 0.0D, 1.0D);
+            tessellator.color(0, 0, 0, modifiedAlpha());
+            tessellator.vertex((double)this.left, this.bottom, 0.0D, 0.0D, 1.0D);
 
-            tessellator.setColorRGBA(0, 0, 0, modifiedAlpha());
-            tessellator.addVertexWithUV((double)this.right, (double)this.bottom, 0.0D, 1.0D, 1.0D);
+            tessellator.color(0, 0, 0, modifiedAlpha());
+            tessellator.vertex((double)this.right, this.bottom, 0.0D, 1.0D, 1.0D);
 
-            tessellator.setColorRGBA(0, 0, 0, 0);
-            tessellator.addVertexWithUV((double)this.right, (double)(this.bottom - 4), 0.0D, 1.0D, 0.0D);
+            tessellator.color(0, 0, 0, 0);
+            tessellator.vertex((double)this.right, (this.bottom - 4), 0.0D, 1.0D, 0.0D);
 
-            tessellator.setColorRGBA(0, 0, 0, 0);
-            tessellator.addVertexWithUV((double)this.left, (double)(this.bottom - 4), 0.0D, 0.0D, 0.0D);
+            tessellator.color(0, 0, 0, 0);
+            tessellator.vertex(this.left, (this.bottom - 4), 0.0D, 0.0D, 0.0D);
 
             tessellator.draw();
 
@@ -244,43 +242,43 @@ public abstract class GuiSlot {
                     l1 = this.top;
                 }
 
-                tessellator.startDrawing(7);
+                tessellator.start(7);
 
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)i, (double)this.bottom, 0.0D, 0.0D, 1.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)i, (double)this.bottom, 0.0D, 0.0D, 1.0D);
 
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)j, (double)this.bottom, 0.0D, 1.0D, 1.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)j, (double)this.bottom, 0.0D, 1.0D, 1.0D);
 
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)j, (double)this.top, 0.0D, 1.0D, 0.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)j, (double)this.top, 0.0D, 1.0D, 0.0D);
 
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)i, (double)this.top, 0.0D, 0.0D, 0.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)i, (double)this.top, 0.0D, 0.0D, 0.0D);
 
                 tessellator.draw();
 
 
-                tessellator.startDrawing(7);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)i, (double)(l1 + k1), 0.0D, 0.0D, 1.0D);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)j, (double)(l1 + k1), 0.0D, 1.0D, 1.0D);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)j, (double)l1, 0.0D, 1.0D, 0.0D);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)i, (double)l1, 0.0D, 0.0D, 0.0D);
+                tessellator.start(7);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)i, (double)(l1 + k1), 0.0D, 0.0D, 1.0D);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)j, (double)(l1 + k1), 0.0D, 1.0D, 1.0D);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)j, (double)l1, 0.0D, 1.0D, 0.0D);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)i, (double)l1, 0.0D, 0.0D, 0.0D);
                 tessellator.draw();
 
-                tessellator.startDrawing(7);
-                tessellator.setColorRGBA(192, 192, 192, 255);
-                tessellator.addVertexWithUV((double)i, (double)(l1 + k1 - 1), 0.0D, 0.0D, 1.0D);
-                tessellator.setColorRGBA(192, 192, 192, 255);
-                tessellator.addVertexWithUV((double)(j - 1), (double)(l1 + k1 - 1), 0.0D, 1.0D, 1.0D);
-                tessellator.setColorRGBA(192, 192, 192, 255);
-                tessellator.addVertexWithUV((double)(j - 1), (double)l1, 0.0D, 1.0D, 0.0D);
-                tessellator.setColorRGBA(192, 192, 192, 255);
-                tessellator.addVertexWithUV((double)i, (double)l1, 0.0D, 0.0D, 0.0D);
+                tessellator.start(7);
+                tessellator.color(192, 192, 192, 255);
+                tessellator.vertex((double)i, (double)(l1 + k1 - 1), 0.0D, 0.0D, 1.0D);
+                tessellator.color(192, 192, 192, 255);
+                tessellator.vertex((double)(j - 1), (double)(l1 + k1 - 1), 0.0D, 1.0D, 1.0D);
+                tessellator.color(192, 192, 192, 255);
+                tessellator.vertex((double)(j - 1), (double)l1, 0.0D, 1.0D, 0.0D);
+                tessellator.color(192, 192, 192, 255);
+                tessellator.vertex((double)i, (double)l1, 0.0D, 0.0D, 0.0D);
                 tessellator.draw();
             }
 
@@ -424,7 +422,7 @@ public abstract class GuiSlot {
     protected void drawSelectionBox(int insideLeft, int insideTop, int mouseXIn, int mouseYIn, float partialTicks)
     {
         int i = this.getSize();
-        Tessellator tessellator = Tessellator.instance;
+        Tessellator tessellator = Tessellator.INSTANCE;
 
         for (int j = 0; j < i; ++j)
         {
@@ -442,24 +440,24 @@ public abstract class GuiSlot {
                 int j1 = this.left + this.width / 2 + this.getListWidth() / 2;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
-                tessellator.startDrawing(7);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)i1, (double)(k + l + 2), 0.0D, 0.0D, 1.0D);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)j1, (double)(k + l + 2), 0.0D, 1.0D, 1.0D);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)j1, (double)(k - 2), 0.0D, 1.0D, 0.0D);
-                tessellator.setColorRGBA(128, 128, 128, 255);
-                tessellator.addVertexWithUV((double)i1, (double)(k - 2), 0.0D, 0.0D, 0.0D);
+                tessellator.start(7);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)i1, (double)(k + l + 2), 0.0D, 0.0D, 1.0D);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)j1, (double)(k + l + 2), 0.0D, 1.0D, 1.0D);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)j1, (double)(k - 2), 0.0D, 1.0D, 0.0D);
+                tessellator.color(128, 128, 128, 255);
+                tessellator.vertex((double)i1, (double)(k - 2), 0.0D, 0.0D, 0.0D);
 
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)(i1 + 1), (double)(k + l + 1), 0.0D, 0.0D, 1.0D);
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)(j1 - 1), (double)(k + l + 1), 0.0D, 1.0D, 1.0D);
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)(j1 - 1), (double)(k - 1), 0.0D, 1.0D, 0.0D);
-                tessellator.setColorRGBA(0, 0, 0, 255);
-                tessellator.addVertexWithUV((double)(i1 + 1), (double)(k - 1), 0.0D, 0.0D, 0.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)(i1 + 1), (double)(k + l + 1), 0.0D, 0.0D, 1.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)(j1 - 1), (double)(k + l + 1), 0.0D, 1.0D, 1.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)(j1 - 1), (double)(k - 1), 0.0D, 1.0D, 0.0D);
+                tessellator.color(0, 0, 0, 255);
+                tessellator.vertex((double)(i1 + 1), (double)(k - 1), 0.0D, 0.0D, 0.0D);
                 tessellator.draw();
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
             }
@@ -475,20 +473,20 @@ public abstract class GuiSlot {
 
     protected void overlayBackground(int startY, int endY, int startAlpha, int endAlpha)
     {
-        Tessellator tessellator = Tessellator.instance;
-        this.mc.renderEngine.bindTexture(this.mc.renderEngine.getTexture("/gui/background.png"));
+        Tessellator tessellator = Tessellator.INSTANCE;
+        this.mc.textureManager.bindTexture(this.mc.textureManager.getTextureId("/gui/background.png"));
         GL11.glColor4f(1F, 1F, 1F, 1F);
         float f = 32.0F;
-        tessellator.startDrawing(7);
+        tessellator.start(7);
         
-        tessellator.setColorRGBA(64, 64, 64, endAlpha);
-        tessellator.addVertexWithUV((double)this.left, (double)endY, 0.0D, 0.0D, (double)((float)endY / 32.0F));
-        tessellator.setColorRGBA(64, 64, 64, endAlpha);
-        tessellator.addVertexWithUV((double)(this.left + this.width), (double)endY, 0.0D, (double)((float)this.width / 32.0F), (double)((float)endY / 32.0F));
-        tessellator.setColorRGBA(64, 64, 64, startAlpha);
-        tessellator.addVertexWithUV((double)(this.left + this.width), (double)startY, 0.0D, (double)((float)this.width / 32.0F), (double)((float)startY / 32.0F));
-        tessellator.setColorRGBA(64, 64, 64, startAlpha);
-        tessellator.addVertexWithUV((double)this.left, (double)startY, 0.0D, 0.0D, (double)((float)startY / 32.0F));
+        tessellator.color(64, 64, 64, endAlpha);
+        tessellator.vertex((double)this.left, (double)endY, 0.0D, 0.0D, (double)((float)endY / 32.0F));
+        tessellator.color(64, 64, 64, endAlpha);
+        tessellator.vertex((double)(this.left + this.width), (double)endY, 0.0D, (double)((float)this.width / 32.0F), (double)((float)endY / 32.0F));
+        tessellator.color(64, 64, 64, startAlpha);
+        tessellator.vertex((double)(this.left + this.width), (double)startY, 0.0D, (double)((float)this.width / 32.0F), (double)((float)startY / 32.0F));
+        tessellator.color(64, 64, 64, startAlpha);
+        tessellator.vertex((double)this.left, (double)startY, 0.0D, 0.0D, (double)((float)startY / 32.0F));
         
         tessellator.draw();
     }
@@ -506,18 +504,18 @@ public abstract class GuiSlot {
 
     protected void drawContainerBackground(Tessellator tessellator)
     {
-        this.mc.renderEngine.bindTexture(this.mc.renderEngine.getTexture("/gui/background.png"));
+        this.mc.textureManager.bindTexture(this.mc.textureManager.getTextureId("/gui/background.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
-        tessellator.startDrawing(7);
-        tessellator.setColorRGBA(32, 32, 32, 255);
-        tessellator.addVertexWithUV((double)this.left,  (double)this.bottom, 0.0D, (double)((float)this.left  / f), (double)((float)(this.bottom + (int)this.amountScrolled) / f));
-        tessellator.setColorRGBA(32, 32, 32, 255);
-        tessellator.addVertexWithUV((double)this.right, (double)this.bottom, 0.0D, (double)((float)this.right / f), (double)((float)(this.bottom + (int)this.amountScrolled) / f));
-        tessellator.setColorRGBA(32, 32, 32, 255);
-        tessellator.addVertexWithUV((double)this.right, (double)this.top,    0.0D, (double)((float)this.right / f), (double)((float)(this.top    + (int)this.amountScrolled) / f));
-        tessellator.setColorRGBA(32, 32, 32, 255);
-        tessellator.addVertexWithUV((double)this.left,  (double)this.top,    0.0D, (double)((float)this.left  / f), (double)((float)(this.top    + (int)this.amountScrolled) / f));
+        tessellator.start(7);
+        tessellator.color(32, 32, 32, 255);
+        tessellator.vertex((double)this.left,  (double)this.bottom, 0.0D, (double)((float)this.left  / f), (double)((float)(this.bottom + (int)this.amountScrolled) / f));
+        tessellator.color(32, 32, 32, 255);
+        tessellator.vertex((double)this.right, (double)this.bottom, 0.0D, (double)((float)this.right / f), (double)((float)(this.bottom + (int)this.amountScrolled) / f));
+        tessellator.color(32, 32, 32, 255);
+        tessellator.vertex((double)this.right, (double)this.top,    0.0D, (double)((float)this.right / f), (double)((float)(this.top    + (int)this.amountScrolled) / f));
+        tessellator.color(32, 32, 32, 255);
+        tessellator.vertex((double)this.left,  (double)this.top,    0.0D, (double)((float)this.left  / f), (double)((float)(this.top    + (int)this.amountScrolled) / f));
         tessellator.draw();
     }
 

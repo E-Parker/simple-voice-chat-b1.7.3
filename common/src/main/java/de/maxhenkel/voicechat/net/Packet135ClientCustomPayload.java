@@ -1,8 +1,8 @@
 package de.maxhenkel.voicechat.net;
 
-import de.maxhenkel.voicechat.extensions.NetHandlerExtension;
-import net.minecraft.src.NetHandler;
-import net.minecraft.src.Packet;
+import de.maxhenkel.voicechat.extensions.NetworkHandlerExtension;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.Packet;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,7 +25,7 @@ public class Packet135ClientCustomPayload extends Packet {
     }
 
     @Override
-    public void readPacketData(DataInputStream dataInputStream) {
+    public void read(DataInputStream dataInputStream) {
         try {
             this.channel = dataInputStream.readUTF();
             int i = dataInputStream.readInt();
@@ -44,7 +44,7 @@ public class Packet135ClientCustomPayload extends Packet {
     }
 
     @Override
-    public void writePacketData(DataOutputStream dataOutputStream) {
+    public void write(DataOutputStream dataOutputStream) {
         try {
             dataOutputStream.writeUTF(this.channel);
             dataOutputStream.writeInt(this.buf.length);
@@ -55,8 +55,8 @@ public class Packet135ClientCustomPayload extends Packet {
     }
 
     @Override
-    public void processPacket(NetHandler netHandler) {
-        ((NetHandlerExtension) netHandler).processCustomPayload(this);
+    public void apply(NetworkHandler netHandler) {
+        ((NetworkHandlerExtension) netHandler).processCustomPayload(this);
 
         if (this.buf != null) {
             this.buf = null;
@@ -66,7 +66,7 @@ public class Packet135ClientCustomPayload extends Packet {
     private int utfLength = -1;
 
     @Override
-    public int getPacketSize() {
+    public int size() {
         if (utfLength == -1) {
             int strLength = this.channel.length();
             utfLength = strLength;

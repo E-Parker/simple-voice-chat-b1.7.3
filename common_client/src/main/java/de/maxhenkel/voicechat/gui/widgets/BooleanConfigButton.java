@@ -17,7 +17,7 @@ public class BooleanConfigButton extends ButtonBase {
     }
 
     private void updateText() {
-        displayString = component.apply(entry.get());
+        text = component.apply(entry.get());
     }
 
     @Override

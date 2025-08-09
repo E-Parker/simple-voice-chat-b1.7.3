@@ -7,18 +7,18 @@ import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.client.ClientPlayerStateManager;
 import de.maxhenkel.voicechat.voice.client.MicrophoneActivationType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MuteTooltipSupplier implements ImageButton.TooltipSupplier {
 
-    private GuiScreen screen;
+    private Screen screen;
     private ClientPlayerStateManager stateManager;
 
-    public MuteTooltipSupplier(GuiScreen screen, ClientPlayerStateManager stateManager) {
+    public MuteTooltipSupplier(Screen screen, ClientPlayerStateManager stateManager) {
         this.screen = screen;
         this.stateManager = stateManager;
     }
@@ -28,17 +28,17 @@ public class MuteTooltipSupplier implements ImageButton.TooltipSupplier {
         List<String> tooltip = new ArrayList<>();
 
         if (!canMuteMic()) {
-            tooltip.add(StringTranslate.getInstance().translateKey("message.voicechat.mute.disabled_ptt"));
+            tooltip.add(TranslationStorage.getInstance().get("message.voicechat.mute.disabled_ptt"));
         } else if (stateManager.isMuted()) {
-            tooltip.add(StringTranslate.getInstance().translateKey("message.voicechat.mute.enabled"));
+            tooltip.add(TranslationStorage.getInstance().get("message.voicechat.mute.enabled"));
         } else {
-            tooltip.add(StringTranslate.getInstance().translateKey("message.voicechat.mute.disabled"));
+            tooltip.add(TranslationStorage.getInstance().get("message.voicechat.mute.disabled"));
         }
 
         Minecraft mc = MinecraftAccessor.getMinecraft();
         for (int i = 0; i < tooltip.size(); i++) {
             String s = tooltip.get(i);
-            mc.fontRenderer.drawStringWithShadow(s, mouseX, (int) (i * TextureHelper.FONT_HEIGHT + 2) + mouseY, 16777215);
+            mc.textRenderer.drawWithShadow(s, mouseX, (int) (i * TextureHelper.FONT_HEIGHT + 2) + mouseY, 16777215);
         }
     }
 

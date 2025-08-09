@@ -1,11 +1,10 @@
 package de.maxhenkel.voicechat.gui.volume;
 
 import de.maxhenkel.voicechat.VoicechatClient;
-import de.maxhenkel.voicechat.extensions.GuiExtension;
+import de.maxhenkel.voicechat.extensions.DrawContextExtension;
 import de.maxhenkel.voicechat.gui.GameProfileUtils;
 import de.maxhenkel.voicechat.util.TextureHelper;
 import de.maxhenkel.voicechat.voice.common.PlayerState;
-import net.minecraft.src.Gui;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -31,15 +30,15 @@ public class PlayerVolumeEntry extends VolumeEntry {
         GL11.glColor4f(1F, 1F, 1F, 1F);
         if (state != null) {
             GameProfileUtils.bindSkinTexture(state.getName());
-            ((GuiExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 8F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
+            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 8F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
             GL11.glEnable(GL11.GL_BLEND);
-            ((GuiExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 40F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
+            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 40F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
             GL11.glDisable(GL11.GL_BLEND);
-            minecraft.fontRenderer.drawString(state.getName(), textX, textY, PLAYER_NAME_COLOR);
+            minecraft.textRenderer.draw(state.getName(), textX, textY, PLAYER_NAME_COLOR);
         } else {
             TextureHelper.bindTexture(OTHER_VOLUME_ICON);
-            ((GuiExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 16, 16, 16, 16, SKIN_SIZE, SKIN_SIZE, 16, 16);
-            minecraft.fontRenderer.drawString(OTHER_VOLUME, textX, textY, PLAYER_NAME_COLOR);
+            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 16, 16, 16, 16, SKIN_SIZE, SKIN_SIZE, 16, 16);
+            minecraft.textRenderer.draw(OTHER_VOLUME, textX, textY, PLAYER_NAME_COLOR);
             if (isSelected) {
                 screen.postRender(() -> {
                     screen.drawHoveringText(OTHER_VOLUME_DESCRIPTION, mouseX, mouseY);

@@ -113,20 +113,20 @@ public class ClientCategoryManager extends CategoryManager implements ClientCate
         public void uploadGlTexture() {
             if (id != -1)
                 deleteGlTexture();
-            id = mc.renderEngine.allocateAndSetupTexture(this.image);
+            id = mc.textureManager.load(this.image);
         }
 
         public void bindTexture() {
             this.uploadGlTexture();
-            mc.renderEngine.bindTexture(id);
+            mc.textureManager.bindTexture(id);
         }
 
         public void deleteGlTexture() {
             if (id != -1)
-                mc.renderEngine.deleteTexture(id);
+                mc.textureManager.delete(id);
             else {
-                int index = mc.renderEngine.getTexture(resourceLocation);
-                mc.renderEngine.deleteTexture(index);
+                int index = mc.textureManager.getTextureId(resourceLocation);
+                mc.textureManager.delete(index);
             }
         }
 

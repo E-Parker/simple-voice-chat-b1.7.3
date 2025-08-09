@@ -1,7 +1,5 @@
 package de.maxhenkel.voicechat.net;
 
-import net.minecraft.src.EntityPlayer;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

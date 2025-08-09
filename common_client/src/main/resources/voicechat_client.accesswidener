@@ -1,2 +1,3 @@
 accessWidener v2 named
+accessible method net/minecraft/client/gui/DrawContext fill (IIIII)V
 # transitive-accessible method net/minecraft/src/Gui drawRect (IIIII)V

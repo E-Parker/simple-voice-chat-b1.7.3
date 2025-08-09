@@ -8,7 +8,7 @@ import de.maxhenkel.voicechat.net.NetManager;
 import de.maxhenkel.voicechat.net.RemoveCategoryPacket;
 import de.maxhenkel.voicechat.plugins.CategoryManager;
 import de.maxhenkel.voicechat.plugins.impl.VolumeCategoryImpl;
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 
@@ -21,8 +21,8 @@ public class ServerCategoryManager extends CategoryManager {
         CommonCompatibilityManager.INSTANCE.onPlayerCompatibilityCheckSucceeded(this::onPlayerCompatibilityCheckSucceeded);
     }
 
-    private void onPlayerCompatibilityCheckSucceeded(EntityPlayer player) {
-        Voicechat.logDebug("Synchronizing {} volume categories with {}", categories.size(), player.username);
+    private void onPlayerCompatibilityCheckSucceeded(PlayerEntity player) {
+        Voicechat.logDebug("Synchronizing {} volume categories with {}", categories.size(), player.name);
         for (VolumeCategory category : getCategories()) {
             broadcastAddCategory(category);
         }

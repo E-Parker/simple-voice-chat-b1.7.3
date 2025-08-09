@@ -1,10 +1,10 @@
 package de.maxhenkel.voicechat.permission;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public interface Permission {
 
-    boolean hasPermission(EntityPlayer player);
+    boolean hasPermission(PlayerEntity player);
 
     PermissionType getPermissionType();
 

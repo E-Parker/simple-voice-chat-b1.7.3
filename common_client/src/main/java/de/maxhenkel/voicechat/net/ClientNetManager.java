@@ -1,11 +1,9 @@
 package de.maxhenkel.voicechat.net;
 
 import de.maxhenkel.voicechat.MinecraftAccessor;
-import de.maxhenkel.voicechat.Voicechat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.NetHandler;
+import net.minecraft.client.network.ClientNetworkHandler;
+import net.minecraft.network.NetworkHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -19,13 +17,13 @@ public abstract class ClientNetManager extends NetManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        NetClientHandler connection = MinecraftAccessor.getMinecraft().func_20001_q();
+        ClientNetworkHandler connection = MinecraftAccessor.getMinecraft().getNetworkHandler();
         if (connection != null) {
-            connection.addToSendQueue(new Packet135ClientCustomPayload(packet.getIdentifier().toString(), outputStream.toByteArray()));
+            connection.sendPacket(new Packet135ClientCustomPayload(packet.getIdentifier().toString(), outputStream.toByteArray()));
         }
     }
 
     public interface ClientReceiver<T extends Packet<T>> {
-        void onPacket(Minecraft client, NetHandler handler, T packet);
+        void onPacket(Minecraft client, NetworkHandler handler, T packet);
     }
 }

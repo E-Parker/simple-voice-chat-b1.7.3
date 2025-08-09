@@ -1,44 +1,13 @@
-task publishBukkit(type: GradleBuild) {
-    group = 'voicechat'
-    tasks = [
-            ':bukkit:clean',
-            ':bukkit:curseforge',
-            ':bukkit:modrinth',
-            ':bukkit:publishAllPublicationsToHangar',
-    ]
+plugins {
+    id("java")
+    id("maven-publish")
+    id("fabric-loom") version "1.9.2" apply(false)
+    id("babric-loom-extension") version "1.9.4" apply(false)
+    id("com.github.johnrengelman.shadow") version "${shadow_version}"
 }
 
-task publishAPI(type: GradleBuild) {
-    group = 'voicechat'
-    tasks = [
-            ':api:clean',
-            ':api:publish'
-    ]
-}
 
-task publishAPILocal(type: GradleBuild) {
-    group = 'voicechat'
-    tasks = [
-            ':api:clean',
-            ':api:publishToMavenLocal'
-    ]
-}
-
-task forgeClient(type: GradleBuild) {
-    group = 'voicechat'
-    tasks = [
-            ':forge:runClient'
-    ]
-}
-
-task forgeServer(type: GradleBuild) {
-    group = 'voicechat'
-    tasks = [
-            ':forge:runServer'
-    ]
-}
-
-task cleanAll(type: GradleBuild) {
+tasks.register('cleanAll', GradleBuild) {
     group = 'voicechat'
     tasks = [
             ':common:clean',

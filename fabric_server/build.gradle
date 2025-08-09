@@ -1,9 +1,14 @@
-plugins {
+/*plugins {
     id("maven-publish")
     id("fabric-loom") version "1.9.2"
     id("babric-loom-extension") version "1.9.4"
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
-}
+}*/
+
+apply plugin: "maven-publish"
+apply plugin: "fabric-loom"
+apply plugin: "babric-loom-extension"
+apply plugin: "com.github.johnrengelman.shadow"
 
 archivesBaseName = project.archives_base_name
 version = mod_version

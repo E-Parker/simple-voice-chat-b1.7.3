@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.mixin;
 
 import de.maxhenkel.voicechat.extensions.EntityExtension;
-import net.minecraft.src.Entity;
+import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.UUID;

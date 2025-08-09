@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.permission;
 
-import net.minecraft.src.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 
@@ -8,7 +8,7 @@ public enum PermissionType {
 
     EVERYONE, NOONE, OPS;
 
-    boolean hasPermission(@Nullable EntityPlayer player) {
+    boolean hasPermission(@Nullable PlayerEntity player) {
         switch (this) {
             case EVERYONE:
                 return true;

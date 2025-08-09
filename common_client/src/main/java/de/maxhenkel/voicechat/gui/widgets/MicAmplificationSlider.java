@@ -1,7 +1,7 @@
 package de.maxhenkel.voicechat.gui.widgets;
 
 import de.maxhenkel.voicechat.VoicechatClient;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
 
 public class MicAmplificationSlider extends DebouncedSlider {
 
@@ -15,7 +15,7 @@ public class MicAmplificationSlider extends DebouncedSlider {
     @Override
     protected void updateMessage() {
         long amp = Math.round(value * MAXIMUM * 100F - 100F);
-        displayString = String.format(StringTranslate.getInstance().translateKey("message.voicechat.microphone_amplification"), (amp > 0F ? "+" : "") + amp + "%");
+        text = String.format(TranslationStorage.getInstance().get("message.voicechat.microphone_amplification"), (amp > 0F ? "+" : "") + amp + "%");
     }
 
     @Override

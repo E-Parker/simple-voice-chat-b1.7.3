@@ -1,38 +1,42 @@
-plugins {
+/*plugins {
     id 'java'
     id("maven-publish")
     id("fabric-loom") version "1.9.2"
     id("babric-loom-extension") version "1.9.4"
-}
+}*/
+
+apply plugin: "maven-publish"
+apply plugin: "fabric-loom"
+apply plugin: "babric-loom-extension"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 sourceCompatibility = JavaLanguageVersion.of(java_version as int)
 targetCompatibility = JavaLanguageVersion.of(java_version as int)
 
 repositories {
-    mavenCentral()
     maven { url = "https://maven.glass-launcher.net/releases/" }
+    maven { url = "https://maven.glass-launcher.net/babric/" }
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
+    mavenCentral()
     mavenLocal()
     maven {
         url = "https://maven.bluspring.xyz/"
     }
-    maven { url = "https://mcphackers.github.io/libraries/" }
+    //maven { url = "https://mcphackers.github.io/libraries/" }
 }
 /*
 task prepareWorkspace {
 
-}
+}*/
 
 loom {
     //customManifest.set(custom_manifest_url)
     //clientOnlyMinecraftJar()
     //intermediaryUrl = "https://github.com/BluSpring/maven-repo/raw/main/xyz/bluspring/intermediary/empty/intermediary-empty.jar"
 
-    //accessWidenerPath = file("src/main/resources/voicechat_client.accesswidener")
-}*/
-
-sourceSets {
+    accessWidenerPath = file("src/main/resources/voicechat_client.accesswidener")
+}
+/*sourceSets {
     template {
         java {
             srcDir 'src/template/java'
@@ -42,9 +46,9 @@ sourceSets {
         compileClasspath += sourceSets.template.output
         runtimeClasspath += sourceSets.template.output
     }
-}
-
+}*/
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -64,7 +68,9 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation("com.google.guava:guava:31.1-jre")
     implementation('com.google.code.gson:gson:2.10.1')
-    implementation 'commons-io:commons-io:2.12.0'
+
+
+    implementation 'commons-io:commons-io:2.12.0' //
 
     implementation("org.slf4j:slf4j-api:1.8.0-beta4")
     // convenience stuff
@@ -79,4 +85,8 @@ dependencies {
 
     implementation project(':api')
     implementation project(path: ":common", configuration: "namedElements")
+}
+// To make common-client compilation not fail
+tasks.withType(JavaCompile).configureEach {
+    source(project(':common').sourceSets.template.allSource)
 }

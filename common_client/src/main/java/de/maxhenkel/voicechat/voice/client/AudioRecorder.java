@@ -5,13 +5,13 @@ import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.Voicechat;
 import de.maxhenkel.voicechat.VoicechatClient;
 import de.maxhenkel.voicechat.api.mp3.Mp3Encoder;
-import de.maxhenkel.voicechat.extensions.EntityPlayerExtension;
+import de.maxhenkel.voicechat.extensions.PlayerEntityExtension;
 import de.maxhenkel.voicechat.intercompatibility.CommonCompatibilityManager;
 import de.maxhenkel.voicechat.plugins.impl.mp3.Mp3EncoderImpl;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.EntityPlayerSP;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
@@ -54,9 +54,9 @@ public class AudioRecorder {
         chunks = new ConcurrentHashMap<>();
         encoders = new ConcurrentHashMap<>();
 
-        EntityPlayer player = MinecraftAccessor.getMinecraft().thePlayer;
-        ownName = player.username;
-        ownUUID = ((EntityPlayerExtension) player).getUniqueID();
+        PlayerEntity player = MinecraftAccessor.getMinecraft().player;
+        ownName = player.name;
+        ownUUID = ((PlayerEntityExtension) player).getUniqueID();
 
         stereoFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, SoundManager.SAMPLE_RATE, 16, 2, 4, SoundManager.SAMPLE_RATE, false);
 
@@ -244,7 +244,7 @@ public class AudioRecorder {
 
     private void save() {
         threadPool.execute(() -> {
-            send(StringTranslate.getInstance().translateKey("message.voicechat.processing_recording_session"));
+            send(TranslationStorage.getInstance().get("message.voicechat.processing_recording_session"));
             try {
                 Exception error = null;
                 sendProgress(0F);
@@ -270,24 +270,24 @@ public class AudioRecorder {
                     throw error;
                 }
                 sendProgress(1F);
-                send(StringTranslate.getInstance().translateKeyFormat("message.voicechat.save_session", location.normalize().toString()));
+                send(TranslationStorage.getInstance().get("message.voicechat.save_session", location.normalize().toString()));
             } catch (Exception e) {
                 Voicechat.LOGGER.error("Failed to save recording session", e);
-                send(StringTranslate.getInstance().translateKeyFormat("message.voicechat.save_session_failed", e.getMessage()));
+                send(TranslationStorage.getInstance().get("message.voicechat.save_session_failed", e.getMessage()));
             }
         });
     }
 
     private void sendProgress(float progress) {
-        send(StringTranslate.getInstance().translateKeyFormat("message.voicechat.processing_progress",
+        send(TranslationStorage.getInstance().get("message.voicechat.processing_progress",
                 (String.valueOf((int) (progress * 100F)))));
     }
 
     private void send(String msg) {
         Minecraft mc = MinecraftAccessor.getMinecraft();
-        EntityPlayerSP player = mc.thePlayer;
-        if (player != null && mc.theWorld != null) {
-            mc.ingameGUI.addChatMessage(msg);
+        ClientPlayerEntity player = mc.player;
+        if (player != null && mc.world != null) {
+            mc.inGameHud.addChatMessage(msg);
         } else {
             Voicechat.LOGGER.info("{}", msg);
         }

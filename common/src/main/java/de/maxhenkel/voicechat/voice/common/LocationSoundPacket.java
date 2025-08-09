@@ -1,6 +1,6 @@
 package de.maxhenkel.voicechat.voice.common;
 
-import net.minecraft.src.Vec3D;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 import java.io.DataInputStream;
@@ -10,16 +10,16 @@ import java.util.UUID;
 
 public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
 
-    protected Vec3D location;
+    protected Vec3d location;
     protected float distance;
 
-    public LocationSoundPacket(UUID sender, Vec3D location, byte[] data, long sequenceNumber, float distance, @Nullable String category) {
+    public LocationSoundPacket(UUID sender, Vec3d location, byte[] data, long sequenceNumber, float distance, @Nullable String category) {
         super(sender, data, sequenceNumber, category);
         this.location = location;
         this.distance = distance;
     }
 
-    public LocationSoundPacket(UUID sender, short[] data, Vec3D location, float distance, @Nullable String category) {
+    public LocationSoundPacket(UUID sender, short[] data, Vec3d location, float distance, @Nullable String category) {
         super(sender, data, category);
         this.location = location;
         this.distance = distance;
@@ -29,7 +29,7 @@ public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
 
     }
 
-    public Vec3D getLocation() {
+    public Vec3d getLocation() {
         return location;
     }
 
@@ -41,7 +41,7 @@ public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
     public LocationSoundPacket fromBytes(DataInputStream buf) throws IOException {
         LocationSoundPacket soundPacket = new LocationSoundPacket();
         soundPacket.sender = UUID.fromString(buf.readUTF());
-        soundPacket.location = Vec3D.createVector(buf.readDouble(), buf.readDouble(), buf.readDouble());
+        soundPacket.location = Vec3d.createCached(buf.readDouble(), buf.readDouble(), buf.readDouble());
         int bytesToRead = buf.readInt();
         soundPacket.data = new byte[bytesToRead];
         for (int i = 0; i < bytesToRead; i++) {
@@ -61,9 +61,9 @@ public class LocationSoundPacket extends SoundPacket<LocationSoundPacket> {
     @Override
     public void toBytes(DataOutputStream buf) throws IOException {
         buf.writeUTF(sender.toString());
-        buf.writeDouble(location.xCoord);
-        buf.writeDouble(location.yCoord);
-        buf.writeDouble(location.zCoord);
+        buf.writeDouble(location.x);
+        buf.writeDouble(location.y);
+        buf.writeDouble(location.z);
         buf.writeInt(data.length);
         buf.write(data);
         buf.writeLong(sequenceNumber);
