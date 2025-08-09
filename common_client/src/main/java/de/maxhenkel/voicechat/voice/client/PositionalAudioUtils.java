@@ -21,28 +21,28 @@ public class PositionalAudioUtils {
      * @return a float array of length 2, containing the left and right volume (0-1)
      */
     private static float[] getStereoVolume(Vec3d cameraPos, float yRot, Vec3d soundPos) {
+        // Spatialization fix thanks to @Moyettes
         Vec3d d = soundPos.relativize(cameraPos).normalize();
-        Vector2f diff = new Vector2f((float) d.x, (float) d.z);
-        float diffAngle = Utils.angle(diff, new Vector2f(-1F, 0F));
-        float angle = Utils.normalizeAngle(diffAngle - (yRot + 90F % 360F));
-        float dif = (float) (Math.abs(cameraPos.y - soundPos.y) / 32);
 
-        float rot = angle / 180F;
-        float perc = rot;
-        if (rot < -0.5F) {
-            perc = -(0.5F + (rot + 0.5F));
-        } else if (rot > 0.5F) {
-            perc = 0.5F - (rot - 0.5F);
-        }
-        perc = perc * (1 - dif);
+        double yawRad = Math.toRadians(yRot);
+
+        double rx = Math.cos(yawRad);
+        double rz = Math.sin(yawRad);
+
+        float pan = (float)(d.x * rx + d.z * rz);
+
+        float left  = (float)Math.sqrt(0.5 * (1.0 - pan));
+        float right = (float)Math.sqrt(0.5 * (1.0 + pan));
+
+        float dif = (float)(Math.abs(cameraPos.y - soundPos.y) / 32.0);
+        float vscale = Math.max(0f, 1f - dif);
 
         float minVolume = 0.3F;
-
-        float left = perc < 0F ? Math.abs(perc * 1.4F) + minVolume : minVolume;
-        float right = perc >= 0F ? (perc * 1.4F) + minVolume : minVolume;
+        left  = left  * vscale * 1.4f + minVolume;
+        right = right * vscale * 1.4f + minVolume;
 
         float fill = 1F - Math.max(left, right);
-        left += fill;
+        left  += fill;
         right += fill;
 
         return new float[]{left, right};
@@ -53,7 +53,7 @@ public class PositionalAudioUtils {
      * @return a float array of length 2, containing the left and right volume (0-1)
      */
     private static float[] getStereoVolume(Vec3d soundPos) {
-        return getStereoVolume(getCameraPosition(), mc.player != null ? -mc.player.yaw : 0F, soundPos);
+        return getStereoVolume(getCameraPosition(), mc.player != null ? mc.player.yaw : 0F, soundPos);
     }
 
     /**
@@ -189,7 +189,13 @@ public class PositionalAudioUtils {
     }
 
     public static Vec3d getCameraPosition() {
-        Vec3d vec = mc.player == null ? Vec3d.createCached(0.0, 0.0, 0.0) : mc.player.getPosition(1.0f);
+        Vec3d vec;
+        if (mc.player != null) {
+            vec = mc.player.getPosition(1.0f);
+            return Vec3d.create(vec.x, vec.y+mc.player.getEyeHeight(), vec.z);
+        } else {
+            vec = Vec3d.createCached(0.0, 0.0, 0.0);
+        }
         return vec;
     }
 
