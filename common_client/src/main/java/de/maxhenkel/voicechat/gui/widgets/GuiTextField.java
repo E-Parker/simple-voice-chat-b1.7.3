@@ -6,6 +6,7 @@ import de.maxhenkel.voicechat.util.ChatAllowedCharacters;
 import de.maxhenkel.voicechat.util.MathHelper2;
 import de.maxhenkel.voicechat.util.PlatformUtils;
 import de.maxhenkel.voicechat.util.TextureHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -85,8 +86,8 @@ public class GuiTextField extends DrawContext {
 
     public String getSelectedText()
     {
-        int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
-        int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
+        int i = Math.min(this.cursorPosition, this.selectionEnd);
+        int j = Math.max(this.cursorPosition, this.selectionEnd);
         return this.text.substring(i, j);
     }
 
@@ -99,8 +100,8 @@ public class GuiTextField extends DrawContext {
     {
         String s = "";
         String s1 = ChatAllowedCharacters.filterAllowedCharacters(textToWrite);
-        int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
-        int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
+        int i = Math.min(this.cursorPosition, this.selectionEnd);
+        int j = Math.max(this.cursorPosition, this.selectionEnd);
         int k = this.maxStringLength - this.text.length() - (i - j);
 
         if (!this.text.isEmpty())
@@ -476,49 +477,49 @@ public class GuiTextField extends DrawContext {
             }
 
             int i = this.isEnabled ? this.enabledColor : this.disabledColor;
-            int j = this.cursorPosition - this.lineScrollOffset;
-            int k = this.selectionEnd - this.lineScrollOffset;
-            String s = ((TextRendererExtension) this.fontRenderer).trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
-            boolean flag = j >= 0 && j <= s.length();
-            boolean flag1 = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
+            int curPos = this.cursorPosition - this.lineScrollOffset;
+            int selectEnd = this.selectionEnd - this.lineScrollOffset;
+            String text = ((TextRendererExtension) this.fontRenderer).trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+            boolean is_cursor_in_string = curPos >= 0 && curPos <= text.length();
+            boolean flag1 = this.isFocused && this.cursorCounter / 6 % 2 == 0 && is_cursor_in_string;
             int l = this.enableBackgroundDrawing ? this.x + 4 : this.x;
             int i1 = this.enableBackgroundDrawing ? this.y + (this.height - 8) / 2 : this.y;
             int j1 = l;
 
-            if (k > s.length())
+            if (selectEnd > text.length())
             {
-                k = s.length();
+                selectEnd = text.length();
             }
 
-            if (!s.isEmpty())
+            if (!text.isEmpty())
             {
-                String s1 = flag ? s.substring(0, j) : s;
-                this.fontRenderer.drawWithShadow(s1, l, i1, i);
-                j1 = this.fontRenderer.getWidth(s1);
+                String text_split = is_cursor_in_string ? text.substring(0, curPos) : text;
+                this.fontRenderer.drawWithShadow(text_split, l, i1, i);
+                j1 += this.fontRenderer.getWidth(text_split) + 1; // Offeset post cursor text
             }
 
-            boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
+            boolean show_cursor = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
             int k1 = j1;
 
-            if (!flag)
+            if (!is_cursor_in_string)
             {
-                k1 = j > 0 ? l + this.width : l;
+                k1 = curPos > 0 ? l + this.width : l;
             }
-            else if (flag2)
+            else if (show_cursor)
             {
                 k1 = j1 - 1;
                 --j1;
             }
 
-            if (!s.isEmpty() && flag && j < s.length())
+            if (!text.isEmpty() && is_cursor_in_string && curPos < text.length())
             {
-                this.fontRenderer.drawWithShadow(s.substring(j), (int)j1, (int)i1, i);
-                j1 = this.fontRenderer.getWidth(s.substring(j));
+                this.fontRenderer.drawWithShadow(text.substring(curPos), (int)j1, (int)i1, i);
+                j1 = this.fontRenderer.getWidth(text.substring(curPos));
             }
 
             if (flag1)
             {
-                if (flag2)
+                if (show_cursor)
                 {
                     this.fill(k1, i1 - 1, k1 + 1, i1 + 1 + (int) TextureHelper.FONT_HEIGHT, -3092272);
                 }
@@ -528,9 +529,9 @@ public class GuiTextField extends DrawContext {
                 }
             }
 
-            if (k != j)
+            if (selectEnd != curPos)
             {
-                int l1 = l + this.fontRenderer.getWidth(s.substring(0, k));
+                int l1 = l + this.fontRenderer.getWidth(text.substring(0, selectEnd));
                 this.drawSelectionBox(k1, i1 - 1, l1 - 1, i1 + 1 + (int) TextureHelper.FONT_HEIGHT);
             }
         }
