@@ -97,9 +97,11 @@ public class RenderEvents {
 
     private void onRenderName(Entity entity, String str, double x, double y, double z, int maxDistance) {
         if (!shouldShowIcons()) {
+            Voicechat.LOGGER.info("Should not show icons!");
             return;
         }
         if (VoicechatClient.CLIENT_CONFIG.hideIcons.get()) {
+            Voicechat.LOGGER.info("Hide icons!!!");
             return;
         }
         if (!(entity instanceof PlayerEntity)) {
@@ -110,7 +112,9 @@ public class RenderEvents {
             return;
         }
 
-        if (false) {
+
+
+        if (!minecraft.options.hideHud) {
             ClientPlayerStateManager manager = ClientManager.getPlayerStateManager();
             ClientVoicechat client = ClientManager.getClient();
             UUID groupId = manager.getGroup(player);
@@ -131,6 +135,7 @@ public class RenderEvents {
 
     private void renderPlayerIcon(PlayerEntity entity, String str, double x, double y, double z, int maxDistance, String texture) {
         boolean isThirdPersonFrontal = false;
+        int iconPadding = 2;
         int verticalShift = "deadmau5".equals(str) ? -10 : 0;
 
         float height = entity.height + 0.5F - (entity.isSneaking() ? 0.25F : 0F);
@@ -150,7 +155,7 @@ public class RenderEvents {
 
         GL11.glEnable(GL11.GL_BLEND);
         GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        int halfNameWidth = minecraft.textRenderer.getWidth(str) / 2;
+        int halfNameWidth = minecraft.textRenderer.getWidth(str) / 2 + iconPadding;
         GL11.glTranslatef(halfNameWidth, verticalShift - 1F, 0F);
         if (!entity.isSneaking()) {
             drawIcon(texture, true);

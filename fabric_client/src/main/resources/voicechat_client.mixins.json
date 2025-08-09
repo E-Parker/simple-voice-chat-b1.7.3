@@ -22,6 +22,7 @@
     "TranslationStorageMixin",
     "TexturePackBaseMixin",
     "TexturePackCustomMixin",
-    "WorldMixin"
+    "WorldMixin",
+    "LivingEntityRendererMixin"
   ]
 }

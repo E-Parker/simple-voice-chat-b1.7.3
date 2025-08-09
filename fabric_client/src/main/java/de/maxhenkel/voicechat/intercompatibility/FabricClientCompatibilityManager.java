@@ -54,14 +54,6 @@ public class FabricClientCompatibilityManager extends ClientCompatibilityManager
 
     public void onRenderName(Entity entity, String str, double x, double y, double z, int maxDistance) {
         renderNameplateEvents.forEach(renderNameplateEvent -> renderNameplateEvent.render(entity, str, x, y, z, maxDistance));
-        //TODO Check if player can be seen
-        if (minecraft == null)
-            minecraft = MinecraftAccessor.getMinecraft();
-
-        if (minecraft.player == null /*|| entity.isInvisibleTo(minecraft.player)*/) {
-            return;
-        }
-        renderNameplateEvents.forEach(renderNameplateEvent -> renderNameplateEvent.render(entity, str, x, y, z, maxDistance));
     }
 
     public void onRenderHUD(float delta) {

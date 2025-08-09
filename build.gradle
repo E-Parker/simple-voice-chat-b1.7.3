@@ -16,3 +16,22 @@ tasks.register('cleanAll', GradleBuild) {
             ':bukkit:clean',
     ]
 }
+tasks.register('runFabricClient', GradleBuild) {
+    group = 'voicechat'
+    tasks = [
+            ':fabric_client:runClient'
+    ]
+}
+tasks.register('runFabricServer', GradleBuild) {
+    group = 'voicechat'
+    tasks = [
+            ':fabric_client:runServer'
+    ]
+}
+tasks.register('buildAll', GradleBuild) {
+    group = 'voicechat'
+    tasks = [
+            ':fabric_client:build',
+            ':fabric_server:build',
+    ]
+}
