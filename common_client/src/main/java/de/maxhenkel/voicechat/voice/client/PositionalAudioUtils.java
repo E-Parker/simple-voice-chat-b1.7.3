@@ -24,7 +24,7 @@ public class PositionalAudioUtils {
         Vec3d d = soundPos.relativize(cameraPos).normalize();
         Vector2f diff = new Vector2f((float) d.x, (float) d.z);
         float diffAngle = Utils.angle(diff, new Vector2f(-1F, 0F));
-        float angle = Utils.normalizeAngle(diffAngle - (yRot % 360F));
+        float angle = Utils.normalizeAngle(diffAngle - (yRot + 90F % 360F));
         float dif = (float) (Math.abs(cameraPos.y - soundPos.y) / 32);
 
         float rot = angle / 180F;
