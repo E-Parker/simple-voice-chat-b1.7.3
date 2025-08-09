@@ -15,6 +15,7 @@ import java.util.List;
 
 public class GuiEnhancedControls extends Screen {
     private Screen parent;
+    protected String title = "Controls";
     private GameOptions options;
     private int buttonId = -1;
 
@@ -23,7 +24,6 @@ public class GuiEnhancedControls extends Screen {
         this.options = options;
     }
 
-    private final List<ButtonWidget> scrollableList = new LinkedList<>();
     private int currentPage = 0;
     private int maxPage = 0;
 
@@ -54,7 +54,8 @@ public class GuiEnhancedControls extends Screen {
                 maxPage++;
             }
 
-            this.scrollableList.add(new OptionButtonWidget(i, buttonWidth + j % 2 * 160, y, 70, 20, this.getOptionDisplayString(i)));
+            // Move back to buttons list to fix window resize not updating the buttons
+            this.buttons.add(new OptionButtonWidget(i, buttonWidth + j % 2 * 160, y, 70, 20, this.getOptionDisplayString(i)));
             j++;
         }
 
@@ -79,8 +80,8 @@ public class GuiEnhancedControls extends Screen {
     }
 
     protected void buttonClicked(ButtonWidget guiButton) {
-        for(int var2 = 0; var2 < this.mergedKeyBindings.size(); ++var2) {
-            (this.scrollableList.get(var2)).text = this.getOptionDisplayString(var2);
+        for(int i = 0; i < this.mergedKeyBindings.size(); ++i) {
+            ((ButtonWidget)this.buttons.get(i)).text = this.getOptionDisplayString(i);
         }
 
         if (guiButton.id == 200) { // Ok
@@ -107,7 +108,7 @@ public class GuiEnhancedControls extends Screen {
                 i = Keyboard.KEY_NONE;
 
             this.setKeyBinding(this.buttonId, i);
-            (this.scrollableList.get(this.buttonId)).text = this.getOptionDisplayString(this.buttonId);
+            ((ButtonWidget)this.buttons.get(this.buttonId)).text = this.getOptionDisplayString(this.buttonId);
             this.buttonId = -1;
         } else {
             super.keyPressed(c, i);
@@ -124,8 +125,8 @@ public class GuiEnhancedControls extends Screen {
     @Override
     protected void mouseClicked(int i, int j, int k) {
         if (k == 0) {
-            for(int var4 = 0; var4 < this.scrollableList.size(); ++var4) {
-                ButtonWidget var5 = this.scrollableList.get(var4);
+            for(int var4 = 0; var4 < this.mergedKeyBindings.size(); ++var4) {
+                ButtonWidget var5 = (ButtonWidget)this.buttons.get(var4);
                 if (this.isItemVisible(var4) && var5.isMouseOver(this.minecraft, i, j)) {
                     this.minecraft.soundManager.playSound("random.click", 1.0F, 1.0F);
                     this.buttonClicked(var5);
@@ -142,16 +143,16 @@ public class GuiEnhancedControls extends Screen {
 
     public void render(int i, int j, float f) {
         this.renderBackground();
-        this.drawCenteredTextWithShadow(this.textRenderer, "Controls", this.width / 2, 20, 16777215);
+        this.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 16777215);
         int buttonWidth = this.width / 2 - 155;
 
-        for(int var5 = 0; var5 < this.mergedKeyBindings.size(); ++var5) {
-            if (!isItemVisible(var5))
+        for(int keyBind = 0; keyBind < this.mergedKeyBindings.size(); ++keyBind) {
+            if (!isItemVisible(keyBind))
                 continue;
 
-            ButtonWidget button = this.scrollableList.get(var5);
+            ButtonWidget button = (ButtonWidget)this.buttons.get(keyBind);
             button.render(minecraft, i, j);
-            this.drawTextWithShadow(this.textRenderer, this.getKeyBindingDescription(var5), buttonWidth + var5 % 2 * 160 + 70 + 6, button.y + 7, -1);
+            this.drawTextWithShadow(this.textRenderer, this.getKeyBindingDescription(keyBind), buttonWidth + keyBind % 2 * 160 + 70 + 6, button.y + 7, -1);
         }
 
         this.drawCenteredTextWithShadow(this.textRenderer, String.format("%d / %d", currentPage + 1, maxPage + 1), this.width / 2, this.height / 6 + 148 - 4, 16777215);
