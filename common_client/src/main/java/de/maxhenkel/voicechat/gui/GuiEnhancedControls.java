@@ -56,6 +56,11 @@ public class GuiEnhancedControls extends Screen {
 
             // Move back to buttons list to fix window resize not updating the buttons
             this.buttons.add(new OptionButtonWidget(i, buttonWidth + j % 2 * 160, y, 70, 20, this.getOptionDisplayString(i)));
+
+            if(!isItemVisible(i)){
+                ((ButtonWidget)this.buttons.get(i)).visible = false;
+            }
+
             j++;
         }
 
@@ -91,10 +96,12 @@ public class GuiEnhancedControls extends Screen {
             if (currentPage > 0) {
                 currentPage--;
             }
+            updateButtonVisibility();
         } else if (guiButton.id == 203) { // Front
             if (currentPage < maxPage) {
                 currentPage++;
             }
+            updateButtonVisibility();
         } else {
             this.buttonId = guiButton.id;
             guiButton.text = "> " + this.getOptionDisplayString(guiButton.id) + " <";
@@ -141,6 +148,13 @@ public class GuiEnhancedControls extends Screen {
         return i <= ((currentPage + 1) * splitEvery) - 1 && i >= (currentPage * splitEvery);
     }
 
+    public void updateButtonVisibility() {
+        for(int keyBind = 0; keyBind < this.mergedKeyBindings.size(); ++keyBind) {
+            ButtonWidget button = (ButtonWidget)this.buttons.get(keyBind);
+            button.visible = isItemVisible(keyBind);
+        }
+    }
+
     public void render(int i, int j, float f) {
         this.renderBackground();
         this.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 16777215);
@@ -151,7 +165,6 @@ public class GuiEnhancedControls extends Screen {
                 continue;
 
             ButtonWidget button = (ButtonWidget)this.buttons.get(keyBind);
-            button.render(minecraft, i, j);
             this.drawTextWithShadow(this.textRenderer, this.getKeyBindingDescription(keyBind), buttonWidth + keyBind % 2 * 160 + 70 + 6, button.y + 7, -1);
         }
 
