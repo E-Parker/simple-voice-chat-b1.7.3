@@ -14,10 +14,35 @@ archivesBaseName = project.archives_base_name
 version = mod_version
 group = maven_group
 
+static def getUsername() {
+    Random rand = new Random(System.currentTimeMillis())
+
+    // https://simple.wikipedia.org/wiki/Wikipedia:List_of_simple_adjectives
+    ArrayList<String> adjectives = ["Large", "Small", "Long", "Short", "Thick", "Deep", "Low", "High", "Near", "Far", "Gone", "Slow", "Late", "Dark", "Cloudy", "Starry", "Hot", "Warm", "Cold", "Cool", "Windy", "Noisy", "Loud", "Strong", "Wet", "Heavy", "Light", "Weak", "Tidy", "Dirt", "Empty", "Full", "Close", "Thirsty", "Hungry", "Fat", "Old", "Fresh", "Dead", "Healthy", "Sweet", "Sour", "Bitter", "Salty", "Spicy", "Bad", "Great", "Important", "Useful", "Expensive", "Cheap", "Free", "Weak", "Free", "Afraid", "Brave", "Fine", "Sad", "Proud", "Comfortable", "Happy", "Clever", "Interesting", "Exciting", "Funny", "Polite", "Fair", "Busy", "Lazy", "Lucky", "Well", "Careful"];
+    ArrayList<String> animals = ["Bird", "Cow", "Dog", "Whale", "Cat", "Horse", "Fox", "Beaver", "Raccoon", "Ferret", "Rabbit", "Bat", "Bee", "Spider", "Butterfly", "Cheeta", "Fish", "Cod"];
+
+    String name = animals[rand.nextInt(animals.size())]
+
+    int adjectiveCount = rand.nextInt(2) + 1
+
+    for (int i = 0; i < adjectiveCount; i++) {
+        name = adjectives[rand.nextInt(adjectives.size())] + name
+    }
+
+    return name;
+}
+
+def username = getUsername()
+
 loom {
     //customManifest.set(custom_manifest_url)
     //intermediaryUrl = "https://github.com/BluSpring/maven-repo/raw/main/xyz/bluspring/intermediary/empty/intermediary-empty.jar"
     //clientOnlyMinecraftJar()
+    runs {
+        client {
+            programArgs(["--username", username])
+        }
+    }
 
     accessWidenerPath = project(":common_client").file("src/main/resources/voicechat_client.accesswidener")
 }
