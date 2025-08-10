@@ -25,7 +25,7 @@ tasks.register('runFabricClient', GradleBuild) {
 tasks.register('runFabricServer', GradleBuild) {
     group = 'voicechat'
     tasks = [
-            ':fabric_client:runServer'
+            ':fabric_server:runServer'
     ]
 }
 tasks.register('buildAll', GradleBuild) {
