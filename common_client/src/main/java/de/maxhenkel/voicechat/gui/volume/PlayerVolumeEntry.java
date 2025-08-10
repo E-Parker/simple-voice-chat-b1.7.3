@@ -30,9 +30,9 @@ public class PlayerVolumeEntry extends VolumeEntry {
         GL11.glColor4f(1F, 1F, 1F, 1F);
         if (state != null) {
             GameProfileUtils.bindSkinTexture(state.getName());
-            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 8F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
+            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 8F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 32F);
             GL11.glEnable(GL11.GL_BLEND);
-            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 40F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 64F);
+            ((DrawContextExtension) screen).drawScaledCustomSizeModalRect(skinX, skinY, 40F, 8F, 8, 8, SKIN_SIZE, SKIN_SIZE, 64F, 32F);
             GL11.glDisable(GL11.GL_BLEND);
             minecraft.textRenderer.draw(state.getName(), textX, textY, PLAYER_NAME_COLOR);
         } else {

@@ -84,9 +84,9 @@ public class JoinGroupEntry extends ListScreenEntryBase {
             GL11.glTranslatef(headPosX, headPosY, 0);
             float scale = (float) SKIN_SIZE / 8F;
             GL11.glScalef(scale, scale, scale);
-            ((DrawContextExtension) parent).drawModalRectWithCustomSizedTexture(0, 0, 8, 8, 8, 8, 64, 64);
+            ((DrawContextExtension) parent).drawModalRectWithCustomSizedTexture(0, 0, 8, 8, 8, 8, 64, 32);
             GL11.glEnable(GL11.GL_BLEND);
-            ((DrawContextExtension) parent).drawModalRectWithCustomSizedTexture(0, 0, 40, 8, 8, 8, 64, 64);
+            ((DrawContextExtension) parent).drawModalRectWithCustomSizedTexture(0, 0, 40, 8, 8, 8, 64, 32);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glPopMatrix();
         }

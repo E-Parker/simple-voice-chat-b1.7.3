@@ -18,7 +18,6 @@ public abstract class OptionsScreenMixin {
 
     @Redirect(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 1))
     public void useEnhancedControls(Minecraft instance, Screen guiScreen, ButtonWidget button) {
-        instance.options.save();
         instance.setScreen(new GuiEnhancedControls((OptionsScreen) (Object) this, this.getOptions()));
     }
 }

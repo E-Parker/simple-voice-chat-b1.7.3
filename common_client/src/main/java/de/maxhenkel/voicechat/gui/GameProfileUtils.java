@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import de.maxhenkel.voicechat.MinecraftAccessor;
 import de.maxhenkel.voicechat.util.ConnectionUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -57,17 +58,43 @@ public class GameProfileUtils {
 
         String skinUrl = texturesJson.getAsJsonObject("SKIN").get("url").getAsString();
         skinUrlCache.put(username, skinUrl);
-
         return skinUrl;
     }
 
     private static final Map<String, Integer> usernameToIdMap = new ConcurrentHashMap<>();
 
     public static void bindSkinTexture(String username) {
-        int skinTextureId;
-
+        /*
+        // Messy but working modern skin fetching
+        int skinTextureId = -1;
         if (!usernameToIdMap.containsKey(username)) {
+            String skinUrl = getSkinUrl(username);
+            if(skinUrl == null) {
+                Voicechat.LOGGER.info("Skin for " + username + " is null!");
+                usernameToIdMap.put(username, -1);
+            } else {
+                Voicechat.LOGGER.info("Queuing skin for download: " + username + ": " + skinUrl);
+                // Queue the image for download
+                mc.textureManager.downloadImage(skinUrl, null);
+                usernameToIdMap.put(username, -2);
+            }
+        } else if (usernameToIdMap.get(username) == -2) {
+            // Get the texture
             skinTextureId = mc.textureManager.downloadTexture(getSkinUrl(username), null);
+            Voicechat.LOGGER.info(skinTextureId);
+
+            if(skinTextureId >= 0) {
+                usernameToIdMap.put(username, skinTextureId);
+            }
+        } else {
+            skinTextureId = usernameToIdMap.get(username);
+        }*/
+        // Requires use of a proper skin fix mod
+        int skinTextureId;
+        if (!usernameToIdMap.containsKey(username)) {
+            PlayerEntity player = MinecraftAccessor.getMinecraft().world.getPlayer(username);
+
+            skinTextureId = mc.textureManager.downloadTexture(player.skinUrl, null);
             usernameToIdMap.put(username, skinTextureId);
         } else {
             skinTextureId = usernameToIdMap.get(username);
