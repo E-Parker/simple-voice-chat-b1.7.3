@@ -1,22 +1,17 @@
 package de.maxhenkel.voicechat.gui;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import de.maxhenkel.voicechat.MinecraftAccessor;
-import de.maxhenkel.voicechat.util.ConnectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameProfileUtils {
 
     private static final Minecraft mc = MinecraftAccessor.getMinecraft();
+
+    /*
     private static final Map<String, String> skinUrlCache = new ConcurrentHashMap<>();
 
     public static String getSkinUrl(String username) {
@@ -59,12 +54,12 @@ public class GameProfileUtils {
         String skinUrl = texturesJson.getAsJsonObject("SKIN").get("url").getAsString();
         skinUrlCache.put(username, skinUrl);
         return skinUrl;
-    }
+    }*/
 
     private static final Map<String, Integer> usernameToIdMap = new ConcurrentHashMap<>();
 
     public static void bindSkinTexture(String username) {
-        /*
+        /* I feel like fetching the user's skin is not voicechat's job
         // Messy but working modern skin fetching
         int skinTextureId = -1;
         if (!usernameToIdMap.containsKey(username)) {
